@@ -22,7 +22,7 @@ golem::fill_desc(
   author_email = "henri.freixe@edhec.com", # Your Email
   repo_url = 'https://github.com/epfl-extension-school/capstone-project-adscv-c5-s2-3897-2390' # The URL of the GitHub Repo (optional)
 )
-
+#1Coucou Test du Commit
 ## Set {golem} options ----
 golem::set_golem_options()
 
