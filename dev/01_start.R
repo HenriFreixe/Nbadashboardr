@@ -16,7 +16,7 @@
 golem::fill_desc(
   pkg_name = "nbadashboardr", # The Name of the package containing the App
   pkg_title = "NBA Analytics Dashboard", # The Title of the package containing the App
-  pkg_description = "As part of my EPFL Capstone Project, I am looking for new ways to visualise NBA Data", # The Description of the package containing the App
+  pkg_description = "Shiny Application as part of my EPFL Capstone Project to analyse and visualise NBA Data in the 21st century", # The Description of the package containing the App
   author_first_name = "Henri", # Your First Name
   author_last_name = "Freixe", # Your Last Name
   author_email = "henri.freixe@edhec.com", # Your Email

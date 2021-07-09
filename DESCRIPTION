@@ -2,7 +2,7 @@ Package: nbadashboardr
 Title: NBA Analytics Dashboard
 Version: 0.0.0.9000
 Authors@R: person('Henri', 'Freixe', email = 'henri.freixe@edhec.com', role = c('cre', 'aut'))
-Description: As part of my EPFL Capstone Project, I am looking for new ways to visualise NBA Data
+Description: Shiny Application as part of my EPFL Capstone Project to analyse and visualise NBA Data in the 21st century
 License: What license is it under?
 Imports: 
     config,
