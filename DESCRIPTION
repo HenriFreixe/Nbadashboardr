@@ -6,8 +6,31 @@ Description: Shiny Application as part of my EPFL Capstone Project to analyse an
 License: What license is it under?
 Imports: 
     config,
+    dplyr,
+    extrafont,
+    furrr,
+    future,
+    gfonts,
+    ggbump,
+    ggiraph,
+    ggplot2,
+    ggtext,
     golem,
-    shiny
+    gt,
+    htmltools,
+    httr,
+    jsonlite,
+    magrittr,
+    patchwork,
+    purrr,
+    RCurl,
+    readr,
+    shiny,
+    showtext,
+    sysfonts,
+    systemfonts,
+    thinkr,
+    tidyr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1

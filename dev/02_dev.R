@@ -16,10 +16,33 @@
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
 usethis::use_package( "thinkr" )
+usethis::use_package( "readr" )
+usethis::use_package( "dplyr" )
+usethis::use_package( "httr" )
+usethis::use_package( "jsonlite" )
+usethis::use_package( "purrr" )
+usethis::use_package( "furrr" )
+usethis::use_package( "ggplot2" )
+usethis::use_package( "patchwork" )
+usethis::use_package( "systemfonts" )
+usethis::use_package( "sysfonts" )
+usethis::use_package( "extrafont" )
+usethis::use_package( "gfonts" )
+usethis::use_package( "showtext" )
+usethis::use_package( "ggtext" )
+usethis::use_package( "tidyr" )
+usethis::use_package( "ggiraph" )
+usethis::use_package( "ggbump" )
+usethis::use_package( "RCurl" )
+usethis::use_package( "gt" )
+usethis::use_package( "htmltools" )
+usethis::use_package( "future" )
+usethis::use_pipe()
+
 
 ## Add modules ----
 ## Create a module infrastructure in R/
-golem::add_module( name = "name_of_module1" ) # Name of the module
+golem::add_module( name = "shot_chart_plotter" ) # Name of the module
 golem::add_module( name = "name_of_module2" ) # Name of the module
 
 ## Add helper functions ----
