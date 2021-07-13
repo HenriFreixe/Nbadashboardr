@@ -15,16 +15,14 @@ mod_shot_chart_plotter_ui <- function(id){
 #' shot_chart_plotter Server Function
 #'
 #' @noRd
-mod_shot_chart_plotter_server <- function(input, output, session){
+mod_shot_chart_plotter_server <- function(id){
   moduleServer(id, function(input, output, session) {
     output$plot <- renderPlot({
-      plotting_function(season_choice = seasons$season_choice(),
-                        all_seasons = seasons$all_seasons(),
-                        data,
-                        characters)
+      plot_court(player = shot_chart$player(),
+                 season = shot_chart$season(),
+                        summary = TRUE)
     })
   })
-#### Encoursssss
 }
 
 ## To be copied in the UI

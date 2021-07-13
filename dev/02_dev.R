@@ -37,13 +37,31 @@ usethis::use_package( "RCurl" )
 usethis::use_package( "gt" )
 usethis::use_package( "htmltools" )
 usethis::use_package( "future" )
+usethis::use_package( "shiny" )
 usethis::use_pipe()
 
 
 ## Add modules ----
-## Create a module infrastructure in R/
+## Create a module infrastructure in R/ #On tweakera peut-être la taille des plots et graphiques après coup
 golem::add_module( name = "shot_chart_plotter" ) # Name of the module
-golem::add_module( name = "name_of_module2" ) # Name of the module
+golem::add_module( name = "shot_chart_selector" ) # Name of the module
+golem::add_module( name = "scoring_perf_plotter" ) # Name of the module
+golem::add_module( name = "scoring_perf_selector" ) # Name of the module
+golem::add_module( name = "player_rank_plotter" ) # Name of the module
+golem::add_module( name = "player_rank_selector" ) # Name of the module
+golem::add_module( name = "players_table_plotter" ) # Name of the module
+golem::add_module( name = "players_table_selector" ) # Same inputs as player_rank, no duplicate?
+golem::add_module( name = "net_rating_plotter" ) # Name of the module
+golem::add_module( name = "net_rating_selector" ) # Only season input
+golem::add_module( name = "off_eff_plotter" ) # Name of the module
+golem::add_module( name = "off_eff_selector" ) # Name of the module
+golem::add_module( name = "win_correlation_plotter" ) # Name of the module
+golem::add_module( name = "win_correlation_selector" ) # Name of the module
+golem::add_module( name = "teams_table_plotter" ) # Name of the module
+golem::add_module( name = "teams_table_selector" ) # Name of the module
+golem::add_module( name = "season_recap_plotter" ) # Name of the module
+golem::add_module( name = "season_recap_selector" ) # Only season input
+
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
