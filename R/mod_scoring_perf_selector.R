@@ -13,11 +13,11 @@ mod_scoring_perf_selector_ui <- function(id){
     column(6,
            selectInput(ns("season"),
                        label="Select a Season :",
-                       choices=c("2020-21","2019-20","2018-19","2017-18"))),
+                       choices=glue::glue("{seq(2000,2020)}-{stringr::str_sub(seq(2000,2020)+1,start = -2)}"))),
     column(6,
            selectInput(ns("team"),
                        label="Select a Team :",
-                       choices=c("No Team","Los Angeles Lakers","San Antoio Spurs","Miami Heat")))
+                       choices=get_team_standings()$team_name))
   )
 }
 

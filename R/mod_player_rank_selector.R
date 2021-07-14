@@ -13,7 +13,7 @@ mod_player_rank_selector_ui <- function(id){
     column(6,
            selectInput(ns("season"),
                        label="Select a Season :",
-                       choices=c("2020-21","2019-20","2018-19","2017-18"))),
+                       choices=glue::glue("{seq(2000,2020)}-{stringr::str_sub(seq(2000,2020)+1,start = -2)}"))),
     column(6,
            selectInput(ns("variable"),
                        label="Select a Ranking Variable :",

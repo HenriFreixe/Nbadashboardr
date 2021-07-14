@@ -13,7 +13,7 @@ mod_win_correlation_selector_ui <- function(id){
     column(4,
            selectInput(ns("season"),
                        label="Select a Season :",
-                       choices=c("2020-21","2019-20","2018-19","2017-18"))),
+                       choices=glue::glue("{seq(2000,2020)}-{stringr::str_sub(seq(2000,2020)+1,start = -2)}"))),
     column(4,
            selectInput(ns("variable"),
                        label="Select a Variable to Correlate to Win Percentage :",
@@ -21,7 +21,7 @@ mod_win_correlation_selector_ui <- function(id){
     column(4,
            selectInput(ns("team"),
                        label="Highlight a specific team :",
-                       choices=c("No Specific Team","Los Angeles Lakers","Miami Heat","San Antonio Spurs")))
+                       choices=c("No Specific Team",get_team_standings()$team_name)))
   )
 }
 
