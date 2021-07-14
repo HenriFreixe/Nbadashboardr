@@ -64,7 +64,10 @@ golem::add_module( name = "teams_table_selector" ) # Name of the module
 golem::add_module( name = "season_recap_plotter" ) # Name of the module
 golem::add_module( name = "season_recap_selector" ) # Only season input
 
-# For the year inputs, add a function in an utils file
+### For the year inputs, add a function in an utils file
+### Adding names to choices inputs with the names() function from base R
+### Adding reactivity within UI
+
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
