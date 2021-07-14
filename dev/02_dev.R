@@ -18,6 +18,7 @@
 usethis::use_package( "thinkr" )
 usethis::use_package( "readr" )
 usethis::use_package( "dplyr" )
+usethis::use_package( "magrittr" )
 usethis::use_package( "httr" )
 usethis::use_package( "jsonlite" )
 usethis::use_package( "purrr" )
@@ -39,6 +40,7 @@ usethis::use_package( "htmltools" )
 usethis::use_package( "future" )
 usethis::use_package( "shiny" )
 usethis::use_pipe()
+devtools::document()
 
 
 ## Add modules ----
