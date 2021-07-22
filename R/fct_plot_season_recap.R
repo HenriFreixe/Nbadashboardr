@@ -122,7 +122,7 @@ plot_finals <- function(season = "2019-20") {
                                     y = game,
                                     label = pts),
                        family = "Kiwi Maru",
-                       size = 4.5,
+                       size = 4,
                        color = "#999999") +
     ggplot2::geom_text(data = df,
                        ggplot2::aes(x = 0,
@@ -408,9 +408,9 @@ plot_season_recap <- function(season = "2018-19") {
 
   future::plan(future::multisession)
 
-  A %<-% plot_finals("2018-19") %globals% structure(TRUE, add =c("get_last_name","remove_last_name","get_team_logo_from_team_id","get_player_picture","get_player_picture_fromid","get_champion"))
-  B %<-% plot_season_awards("2018-19") %globals% structure(TRUE, add =c("get_last_name","remove_last_name","get_award"))
-  C %<-% plot_all_stars("2018-19") %globals% structure(TRUE, add =c("get_last_name","remove_last_name"))
+  A %<-% plot_finals(season) %globals% structure(TRUE, add =c("get_last_name","remove_last_name","get_team_logo_from_team_id","get_player_picture","get_player_picture_fromid","get_champion"))
+  B %<-% plot_season_awards(season) %globals% structure(TRUE, add =c("get_last_name","remove_last_name","get_award"))
+  C %<-% plot_all_stars(season) %globals% structure(TRUE, add =c("get_last_name","remove_last_name"))
 
   plot <- ((A/B/C) +
              patchwork::plot_layout(heights = c(6,5,6))) &
