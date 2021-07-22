@@ -30,6 +30,7 @@ Imports:
     sysfonts,
     systemfonts,
     thinkr,
+    tibble,
     tidyr
 Encoding: UTF-8
 LazyData: true

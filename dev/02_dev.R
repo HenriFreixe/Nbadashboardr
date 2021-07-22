@@ -18,6 +18,7 @@
 usethis::use_package( "thinkr" )
 usethis::use_package( "readr" )
 usethis::use_package( "dplyr" )
+usethis::use_package( "tibble" )
 usethis::use_package( "magrittr" )
 usethis::use_package( "httr" )
 usethis::use_package( "jsonlite" )
