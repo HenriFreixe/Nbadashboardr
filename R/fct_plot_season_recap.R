@@ -9,7 +9,7 @@ get_finals_stats_n_game <- function(season = "2019-20", n) {
   res <- httr::GET(url = url_finals_stats(season), httr::add_headers(.headers=.headers))
   json_resp <- jsonlite::fromJSON(httr::content(res, "text"))
 
-  stats_data <- data.frame(json_resp$resultSets$rowSet[1]) %>% as_tibble()
+  stats_data <- data.frame(json_resp$resultSets$rowSet[1]) %>% dplyr::as_tibble()
   colnames(stats_data) <- json_resp$resultSets[["headers"]][[1]]
 
   stats_data <- stats_data %>%
