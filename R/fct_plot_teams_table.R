@@ -12,7 +12,7 @@ get_all_stars <- function(season = "2020-21") {
   df1 <- pre_df[[len-1]]
   df2 <- pre_df[[len]]
 
-  df <- bind_rows(df1,df2) %>%
+  df <- dplyr::bind_rows(df1,df2) %>%
     janitor::clean_names() %>%
     dplyr::select(player_name = player,team_name = team) %>%
     dplyr::mutate(former_team_name = team_name,
@@ -30,7 +30,7 @@ get_all_stars <- function(season = "2020-21") {
 
 get_playoff_teams <- function(season = "2020-21") {
 
-  if (season == "2020-21") {
+  if (season == "2021-22") {
     ""
   }else {
     pre_season_reformat <- stringr::str_sub(season,end = 4) %>% as.integer()
@@ -61,7 +61,7 @@ get_prev_standings <- function(season = "2020-21", conf = "both") {
 
   if (conf == "both") {
     df %>%
-      dplyr::mutate(rank = rank(desc(win_pct), ties.method = "first")) %>%
+      dplyr::mutate(rank = rank(dplyr::desc(win_pct), ties.method = "first")) %>%
       dplyr::select(team_name, previous_rank = rank)
   } else {
     df %>%

@@ -395,11 +395,12 @@ team_logo <- function(team = 'global', width = 50) {
 
 plot_off_evo_interactive <- function(start_season = "2011-12",end_season = "2020-21" ,team = 'global') {
 
-  future::plan(future::multisession)
 
-  A %<-% off_rating_evo_interactive(start_season, end_season, team) %globals% structure(TRUE, add = c("get_last_name"))
-  B %<-%  shot_frequency(start_season,end_season,team) %globals% structure(TRUE, add = c("get_last_name"))
-  team_logo %<-%  team_logo(team)
+  future::plan(future::multisession)
+  future::`%globals%`(future::`%<-%`(A,off_rating_evo_interactive(start_season, end_season, team)),structure(TRUE, add = c("get_last_name")))
+  future::`%globals%`(future::`%<-%`(B,shot_frequency(start_season,end_season,team)),structure(TRUE, add = c("get_last_name")))
+
+  future::`%<-%`(team_logo,team_logo(team))
 
 
   plot <- (A / B) & ggplot2::theme(plot.background = ggplot2::element_rect(fill = court_themes('court'),color = court_themes('court')))

@@ -335,11 +335,11 @@ plot_all_stars <- function(season = "2018-19") {
 
 
   if (get_award(award = "asgmvp", .season = season) %>% length() == 1) {
-    subtitle <- glue::glue("<span style = 'color:#CBA049;font-size:22pt;font-weight:bold'>NBA All-Stars</span><br><span style = 'color:{df %>% filter(player_name == get_award(award = 'asgmvp',.season = season)) %>% pull(col)}'>{get_award(award = 'asgmvp',.season = season)}</span> was the NBA All-Star Game Most Valuable Player")
+    subtitle <- glue::glue("<span style = 'color:#CBA049;font-size:22pt;font-weight:bold'>NBA All-Stars</span><br><span style = 'color:{df %>% dplyr::filter(player_name == get_award(award = 'asgmvp',.season = season)) %>% dplyr::pull(col)}'>{get_award(award = 'asgmvp',.season = season)}</span> was the NBA All-Star Game Most Valuable Player")
 
   } else{
 
-    subtitle <- glue::glue("<span style = 'color:#CBA049;font-size:22pt;font-weight:bold'>NBA All-Star Game Selected Players</span><br><span style = 'color:{df %>% filter(player_name == get_award(award = 'asgmvp',.season = season)[1]) %>% pull(col)}'>{get_award(award = 'asgmvp',.season = season)[1]}</span> and <span style = 'color:{df %>% filter(player_name == get_award(award = 'asgmvp',.season = season)[2]) %>% pull(col)}'>{get_award(award = 'asgmvp',.season = season)[2]}</span> were<br> the NBA All-Star Game Most Valuable Players")
+    subtitle <- glue::glue("<span style = 'color:#CBA049;font-size:22pt;font-weight:bold'>NBA All-Star Game Selected Players</span><br><span style = 'color:{df %>% dplyr::filter(player_name == get_award(award = 'asgmvp',.season = season)[1]) %>% dplyr::pull(col)}'>{get_award(award = 'asgmvp',.season = season)[1]}</span> and <span style = 'color:{df %>% dplyr::filter(player_name == get_award(award = 'asgmvp',.season = season)[2]) %>% dplyr::pull(col)}'>{get_award(award = 'asgmvp',.season = season)[2]}</span> were<br> the NBA All-Star Game Most Valuable Players")
   }
 
 
@@ -408,9 +408,9 @@ plot_season_recap <- function(season = "2018-19") {
 
   future::plan(future::multisession)
 
-  A %<-% plot_finals(season) %globals% structure(TRUE, add =c("get_last_name","remove_last_name","get_team_logo_from_team_id","get_player_picture","get_player_picture_fromid","get_champion"))
-  B %<-% plot_season_awards(season) %globals% structure(TRUE, add =c("get_last_name","remove_last_name","get_award"))
-  C %<-% plot_all_stars(season) %globals% structure(TRUE, add =c("get_last_name","remove_last_name"))
+  future::`%<-%`(A,plot_finals(season) %globals% structure(TRUE, add =c("get_last_name","remove_last_name","get_team_logo_from_team_id","get_player_picture","get_player_picture_fromid","get_champion")))
+  future::`%<-%`(B,plot_season_awards(season) %globals% structure(TRUE, add =c("get_last_name","remove_last_name","get_award")))
+  future::`%<-%`(C,plot_all_stars(season) %globals% structure(TRUE, add =c("get_last_name","remove_last_name")))
 
   plot <- ((A/B/C) +
              patchwork::plot_layout(heights = c(6,5,6))) &

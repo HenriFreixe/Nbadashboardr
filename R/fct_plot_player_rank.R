@@ -120,7 +120,7 @@ get_bpm <- function(season = "2020-21") {
     dplyr::select(player_name,obpm,dbpm,bpm,pos) %>%
     dplyr::mutate(pos = stringr::str_split(pos,"-"),
                   pos = purrr::map(pos,1)) %>%
-    unnest(pos) %>%
+    tidyr::unnest(pos) %>%
     dplyr::mutate(pos = dplyr::if_else(player_name == "James Harden","SG",pos))
 
 
@@ -174,11 +174,11 @@ plot_player_ranking_interactive <- function(season = "2020-21", variable = "bpm"
     dplyr::arrange(dplyr::desc(.data[[variable]])) %>%
     head(10) %>%
     dplyr::left_join(get_team_traditional(season) %>% dplyr::select(team_id,team_name), by = c("team_id")) %>%
-    mutate(label = link_to_img(image, width = 95, alt = player_name),
+    dplyr::mutate(label = link_to_img(image, width = 95, alt = player_name),
            tooltip_label = glue::glue("<div style = 'box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);max-width: 150px;margin: auto;padding-bottom:5px;text-align: center;font-family: Kiwi Maru;background-color:#1A1A1A'><img src= {image} style = 'width : 100%'><span style = 'display: block; margin-top: 0.67em; margin-bottom: 0.67em; margin-left: 0; margin-right: 0; font-weight: bold;color:#BFBFBF;font-size:14px'>{player_name}</span><span style = 'color:grey;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'>{team_name}</span><span style = 'color:#BFBFBF;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'><span style = 'font-weight :bold'>{round(pts,digits =1)}</span> pts per game<br><span style = 'font-weight :bold'>{round(ast,digits =1)}</span> assists per game<br><span style = 'font-weight :bold'>{round(reb,digits =1)}</span> rebounds per game<br><span style = 'font-weight :bold'>{round(stl,digits =1)}</span> steals per game<br><span style = 'font-weight :bold'>{round(blk,digits =1)}</span> blocks per game</span></div>")) %>%
     dplyr::mutate(label = forcats::fct_inorder(label),
-                  color = if_else(dplyr::row_number() == 1,"#CBA049","grey10"),
-                  color2 = if_else(dplyr::row_number() == 1,"#CBA049",court_themes('lines'))) #%>%
+                  color = dplyr::if_else(dplyr::row_number() == 1,"#CBA049","grey10"),
+                  color2 = dplyr::if_else(dplyr::row_number() == 1,"#CBA049",court_themes('lines'))) #%>%
 
 
   if (variable == "bpm") {
@@ -464,7 +464,7 @@ plot_player_ranking_interactive <- function(season = "2020-21", variable = "bpm"
                    plot.caption = ggtext::element_markdown(size = 9,
                                                            margin = ggplot2::margin(t = 20,
                                                                                     b = 10)),
-                   axis.text.y = element_text(size = 12, color = court_themes('lines')),
+                   axis.text.y = ggplot2::element_text(size = 12, color = court_themes('lines')),
                    axis.text.x = ggtext::element_markdown(size = 12,color = court_themes('lines'),
                                                           margin = ggplot2::margin(t = -20)),
                    axis.title.x = ggplot2::element_blank(),

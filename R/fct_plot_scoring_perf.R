@@ -86,7 +86,7 @@ get_scoring_rate <- function(season = "2020-21", team = 'global') {
       dplyr::arrange(dplyr::desc(pts)) %>%
       head(100) %>%
       dplyr::left_join(get_team_traditional(season) %>% dplyr::select(team_id,team_name), by = c("team_id")) %>%
-      dplyr::mutate(selected_team = if_else(team_name == team, 'yes','no')) %>%
+      dplyr::mutate(selected_team = dplyr::if_else(team_name == team, 'yes','no')) %>%
       dplyr::mutate(image = glue::glue("https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/{player_id}.png"),
                     player_label = glue::glue("<div style = 'box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);max-width: 150px;margin: auto;padding-bottom:5px;text-align: center;font-family: Kiwi Maru;background-color:#1A1A1A'><img src= {image} style = 'width : 100%'><span style = 'display: block; margin-top: 0.67em; margin-bottom: 0.67em; margin-left: 0; margin-right: 0; font-weight: bold;color:#BFBFBF;font-size:14px'>{player_name}</span><span style = 'color:grey;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'>{team_name}</span><span style = 'color:#BFBFBF;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'><span style = 'font-weight :bold'>{round(pts_75,digits =1)} pts</span> per 75 poss.<br><span style = 'font-weight :bold'>{scales::percent(ts_pct,accuracy = .1)}</span> TS perc.</span></div>"))
 
@@ -132,7 +132,7 @@ plot_scoring_rate <- function(season = "2020-21",team = "global") {
 
 
   future::plan(future::multisession)
-  team_logo %<-% team_logo(team)
+  future::`%<-%`(team_logo,team_logo(team))
 
   df <- get_scoring_rate(season,team)
   eff_color <- '#de425b'

@@ -185,7 +185,7 @@ get_team_advanced_selections <- function(season = "2020-21") {
     dplyr::left_join(get_all_stars(season) %>%
                        dplyr::group_by(team_name) %>%
                        dplyr::summarise(selections = dplyr::n()), by=c("team_name")) %>%
-    dplyr::mutate(selections = replace_na(selections,0))
+    dplyr::mutate(selections = tidyr::replace_na(selections,0))
 
 
   return(team_stats)
@@ -275,7 +275,7 @@ plot_teams_efficiency_interactive <- function(season = "2020-21") {
                         color = court_themes('lines'),
                         linetype = 'dashed',
                         alpha = .35) +
-    ggplot2::geom_vline(aes(xintercept = mean_off),
+    ggplot2::geom_vline(ggplot2::aes(xintercept = mean_off),
                         color = court_themes('lines'),
                         linetype = 'dashed',
                         alpha = .35) +

@@ -102,7 +102,7 @@ get_bump_data <- function(season = "2020-21", team = 'global', variable = 'salar
     dplyr::select(-season.y) %>%
     dplyr::select(season = season.x, dplyr::everything()) %>%
     dplyr::mutate(rank_win_pct = rank(dplyr::desc(win_pct), ties.method = 'first'),
-                  rank_variable = rank(desc(.data[[variable]]), ties.method = 'first')) %>%
+                  rank_variable = rank(dplyr::desc(.data[[variable]]), ties.method = 'first')) %>%
     dplyr::mutate(variable_pct = .data[[variable]] / max(.data[[variable]])*max(win_pct),
                   selected = dplyr::if_else(team_name == team, 'yes','no'),
                   color = dplyr::if_else(selected == "yes","#CBA049",court_themes('lines'))) %>%

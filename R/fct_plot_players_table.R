@@ -157,7 +157,7 @@ plot_players_table <- function(season = "2020-21", variable = "bpm") {
     gt::fmt(columns = c("bpm","obpm","dbpm"),
             fns = function(x){
               dplyr::if_else(x>0, glue::glue("<span style = 'color:#02af74'>+{x}</span>"),
-                             if_else(x ==0, glue::glue("<span style = 'color:#b3b3b3'>=</span>"),glue::glue("<span style = 'color:#fc7042'>{x}</span>")))
+                             dplyr::if_else(x ==0, glue::glue("<span style = 'color:#b3b3b3'>=</span>"),glue::glue("<span style = 'color:#fc7042'>{x}</span>")))
             }) %>%
     gt::opt_table_font(font = list(
       gt::google_font("Manrope"),
@@ -272,7 +272,7 @@ plot_players_table <- function(season = "2020-21", variable = "bpm") {
                   column_labels.border.top.color = "#0D0D0D",
                   heading.title.font.weight = "bold",
                   heading.subtitle.font.weight = "bold",
-                  data_row.padding = px(3),
+                  data_row.padding = gt::px(3),
                   heading.border.bottom.color = "#a1a1a1",
                   table_body.border.bottom.color = "#a1a1a1",
                   table_body.hlines.color = "#a1a1a1",

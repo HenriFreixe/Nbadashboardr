@@ -481,9 +481,9 @@ plot_court <- function(player,
   # Dataset
 
   df <- get_shot_data_player(player, season, summary) %>%
-    mutate(gp = get_traditional_stats(season) %>% filter(player_name == player) %>% pull(gp)) %>%
-    select(gp, everything()) %>%
-    mutate(fga = fga/gp *6)
+    dplyr::mutate(gp = get_traditional_stats(season) %>% dplyr::filter(player_name == player) %>% dplyr::pull(gp)) %>%
+    dplyr::select(gp, everything()) %>%
+    dplyr::mutate(fga = fga/gp *6)
 
   shot_chart <-  .court_layout +
     ggplot2::geom_point(data = df,
@@ -603,7 +603,7 @@ plot_court <- function(player,
     ggplot2::labs(title = "Shooting frequency by location") +
     theme_dark_cap() +
     ggplot2::theme(plot.margin = ggplot2::margin(t = -10, r = 5.5, l = 5.5, b = 5.5, unit = "pt"),
-                   plot.title = element_text(hjust = .5,
+                   plot.title = ggplot2::element_text(hjust = .5,
                                              margin = ggplot2::margin(t=0,b = 0)),
                    panel.grid = ggplot2::element_blank(),
                    panel.border = ggplot2::element_blank(),
@@ -615,7 +615,7 @@ plot_court <- function(player,
   legend <- accuracy_legend + volume_legend + patchwork::plot_layout(widths = c(1.2,0.8))
 
   (shot_chart / legend + patchwork::plot_layout(heights = c(1,.075))) +
-    patchwork::plot_annotation(caption = glue::glue("Inspiration from Kirk Goldsberry's and Owen Philipp's shot charts<br>Visualisation by Henri Freixe • Sources : Nba.com")) & theme(plot.background = element_rect(fill = court_themes('court'),color = court_themes('court')),
+    patchwork::plot_annotation(caption = glue::glue("Inspiration from Kirk Goldsberry's and Owen Philipp's shot charts<br>Visualisation by Henri Freixe • Sources : Nba.com")) & ggplot2::theme(plot.background = ggplot2::element_rect(fill = court_themes('court'),color = court_themes('court')),
                                                                                                                                                                                        plot.margin = ggplot2::margin(t=0,r=0,b=5.5,l=0,unit = "pt"),
                                                                                                                                                                                        plot.caption = ggtext::element_markdown(size = 9,
                                                                                                                                                                                                                                family = court_themes("font"),
@@ -759,7 +759,7 @@ plot_court_alternative <- function(player,
     ggplot2::labs(title = "Shooting frequency by location") +
     theme_dark_cap() +
     ggplot2::theme(plot.margin = ggplot2::margin(t = -10, r = 5.5, l = 5.5, b = 5.5, unit = "pt"),
-                   plot.title = element_text(hjust = .5,
+                   plot.title = ggplot2::element_text(hjust = .5,
                                              margin = ggplot2::margin(t=0,b = 0)),
                    panel.grid = ggplot2::element_blank(),
                    panel.border = ggplot2::element_blank(),
@@ -771,7 +771,7 @@ plot_court_alternative <- function(player,
   legend <- accuracy_legend + volume_legend + patchwork::plot_layout(widths = c(1.2,0.8))
 
   (shot_chart / legend + patchwork::plot_layout(heights = c(1,.075))) +
-    patchwork::plot_annotation(caption = glue::glue("Inspiration from Kirk Goldsberry's and Owen Philipp's shot charts<br>Visualisation by Henri Freixe • Sources : Nba.com")) & theme(plot.background = element_rect(fill = court_themes('court'),color = court_themes('court')),
+    patchwork::plot_annotation(caption = glue::glue("Inspiration from Kirk Goldsberry's and Owen Philipp's shot charts<br>Visualisation by Henri Freixe • Sources : Nba.com")) & theme(plot.background = ggplot2::element_rect(fill = court_themes('court'),color = court_themes('court')),
                                                                                                                                                                                        plot.margin = ggplot2::margin(t=0,r=0,b=5.5,l=0,unit = "pt"),
                                                                                                                                                                                        plot.caption = ggtext::element_markdown(size = 9,
                                                                                                                                                                                                                                family = court_themes("font"),
