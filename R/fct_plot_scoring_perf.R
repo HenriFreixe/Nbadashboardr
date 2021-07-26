@@ -127,15 +127,7 @@ get_scoring_rate <- function(season = "2020-21", team = 'global') {
 
 }
 
-
-plot_scoring_rate <- function(season = "2020-21",team = "global") {
-
-
-
-  #future::plan(future::multisession)
-  #future::futureAssign("team_logo",team_logo(team))
-  team_logo <- team_logo(team)
-
+plotless_scoring_rate <- function(season = "2020-21", team = "global") {
   df <- get_scoring_rate(season,team)
   eff_color <- '#de425b'
 
@@ -245,7 +237,21 @@ plot_scoring_rate <- function(season = "2020-21",team = "global") {
                    axis.title.x =  ggplot2::element_text(size = 12, color = court_themes('lines')),
                    axis.title.y =  ggplot2::element_text(size = 12, color = court_themes('lines')))
 
-  plot_with_logo <- (plot + patchwork::inset_element(team_logo, left = 0, top = 1.195, right = 0.09  , bottom = 1.1)) & ggplot2::theme(plot.background = ggplot2::element_rect(fill = court_themes('court'), color = court_themes('court')))
+  return(plot)
+
+}
+
+
+plot_scoring_rate <- function(season = "2020-21",team = "global") {
+
+  future::plan(future::multisession)
+
+  a <- furrr::future_invoke_map(.f = list(plotless_scoring_rate,team_logo),.x = list(c(season,team),team))
+
+  #future::futureAssign("team_logo",team_logo(team))
+  #team_logo <- team_logo(team)
+
+  plot_with_logo <- (a[[1]] + patchwork::inset_element(a[[2]], left = 0, top = 1.195, right = 0.09  , bottom = 1.1)) & ggplot2::theme(plot.background = ggplot2::element_rect(fill = court_themes('court'), color = court_themes('court')))
 
 
   ggiraph::girafe(ggobj = plot_with_logo,
