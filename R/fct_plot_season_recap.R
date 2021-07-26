@@ -149,7 +149,7 @@ plot_finals <- function(season = "2019-20") {
                           label.color = NA,
                           lineheight = 0.5,
                           label.padding = grid::unit(c(9,4,4,4),"pt"),
-                          label.r = unit(.25, "lines"),
+                          label.r = grid::unit(.25, "lines"),
                           vjust = 1) +
     #Teams recap Label----------
   ggtext::geom_richtext(data = team_recap_df,
@@ -243,7 +243,7 @@ plot_season_awards <- function(season = "2018-19") {
                           label.color = NA,
                           lineheight = 0.5,
                           label.padding = grid::unit(c(9,4,4,4),"pt"),
-                          label.r = unit(.25, "lines"),
+                          label.r = grid::unit(.25, "lines"),
                           vjust = 1)  +
     #Scales and Labs --------
 
@@ -403,18 +403,19 @@ plot_all_stars <- function(season = "2018-19") {
 }
 
 
-
 plot_season_recap <- function(season = "2018-19") {
 
   future::plan(future::multisession)
+  a <- furrr::future_invoke_map(.f = list(plot_finals,plot_season_awards,plot_all_stars),.x = list(season,season,season))
 
-  future::`%<-%`(A,plot_finals(season) %globals% structure(TRUE, add =c("get_last_name","remove_last_name","get_team_logo_from_team_id","get_player_picture","get_player_picture_fromid","get_champion")))
-  future::`%<-%`(B,plot_season_awards(season) %globals% structure(TRUE, add =c("get_last_name","remove_last_name","get_award")))
-  future::`%<-%`(C,plot_all_stars(season) %globals% structure(TRUE, add =c("get_last_name","remove_last_name")))
+  #future::`%globals%`(future::futureAssign("A",{plot_finals(season)}),structure(TRUE, add =c("get_last_name","remove_last_name","get_team_logo_from_team_id","get_player_picture","get_player_picture_fromid","get_champion")))
+  #future::`%globals%`(future::futureAssign("B",{plot_season_awards(season)}),structure(TRUE, add =c("get_last_name","remove_last_name","get_award")))
+  #future::`%globals%`(future::futureAssign("C",{plot_all_stars(season)}),structure(TRUE, add =c("get_last_name","remove_last_name")))
 
-  plot <- ((A/B/C) +
+
+  plot <- ((a[[1]]/a[[2]]/a[[3]]) +
              patchwork::plot_layout(heights = c(6,5,6))) &
-    theme(plot.background = ggplot2::element_rect(fill = court_themes('court'),color = court_themes('court')))
+    ggplot2::theme(plot.background = ggplot2::element_rect(fill = court_themes('court'),color = court_themes('court')))
 
 
   ggiraph::girafe(ggobj = plot,

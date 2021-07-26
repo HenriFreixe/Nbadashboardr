@@ -159,7 +159,7 @@ bballref_efficiency_season <- function(season = "2020-21") {
     dplyr::select(team_name = team,off_rating = o_rtg)
 
   df %>%
-    dplyr::slice(2:n()) %>%
+    dplyr::slice(2:dplyr::n()) %>%
     dplyr::mutate(off_rating = as.numeric(off_rating),
                   season = season)
 }
@@ -176,7 +176,7 @@ bballref_def_efficiency_season <- function(season = "2020-21") {
     dplyr::select(team_name = team,def_rating = d_rtg)
 
   df %>%
-    dplyr::slice(2:n()) %>%
+    dplyr::slice(2:dplyr::n()) %>%
     dplyr::mutate(def_rating = as.numeric(def_rating),
                   season = season)
 }
@@ -248,11 +248,11 @@ off_rating_evo_interactive <- function(start_season = '2011-12', end_season = '2
                           size = .5) +
     ggplot2::geom_line(ggplot2::aes(x = season, y = av_off_rating, group = 1),
                        color = court_themes('lines'),
-                       size = if_else(team == 'global',.75,0.25)) +
+                       size = dplyr::if_else(team == 'global',.75,0.25)) +
     ggplot2::geom_line(data = line_ratings_team,
                        ggplot2::aes(x = season, y = off_rating, group = 1),
                        color = '#CAB17D',
-                       size = if_else(team == 'global',0,0.75),
+                       size = dplyr::if_else(team == 'global',0,0.75),
                        alpha = alpha_size_team) +
     ggplot2::geom_point(data = ratings %>% dplyr::filter(min == "yes" | max == "yes"),
                         ggplot2::aes(x = season,
@@ -272,7 +272,7 @@ off_rating_evo_interactive <- function(start_season = '2011-12', end_season = '2
                                     shape = 21,
                                     size = 7,
                                     stroke = 1) +
-    ggtext::geom_richtext(aes(x = 7.5,
+    ggtext::geom_richtext(ggplot2::aes(x = 7.5,
                               y = 97.5),
                           label ="<span style = 'font-size:12pt;color:#ccb076;'>Trading off long 2-point shots<br> for 3-point shots helped boost <br>Offensive Efficiency in the 2010s</span>",
                           family = 'Kiwi Maru',
@@ -321,7 +321,7 @@ shot_frequency <- function(start_season = '2011-12',end_season ='2020-21' ,team 
                       position = "dodge",
                       color = "grey20",
                       width = .75) +
-    ggplot2::labs(subtitle = glue::glue("Three point shots went from <span style = 'font-size:18pt'>{dataset2 %>% filter(shot_distance == 'share_3') %>% head(1) %>%  pull(share) %>% scales::percent() }</span> to <span style = 'font-size:18pt'>{dataset2 %>% filter(shot_distance == 'share_3') %>% tail(1) %>% pull(share) %>% scales::percent()}</span><br> of all<span style = 'color:#CBA049;font-size:18pt'>{if_else(team =='global','',as.character(glue::glue(' {get_last_name(team)}')))}</span> shots taken in the time span"),
+    ggplot2::labs(subtitle = glue::glue("Three point shots went from <span style = 'font-size:18pt'>{dataset2 %>% dplyr::filter(shot_distance == 'share_3') %>% head(1) %>%  dplyr::pull(share) %>% scales::percent() }</span> to <span style = 'font-size:18pt'>{dataset2 %>% dplyr::filter(shot_distance == 'share_3') %>% tail(1) %>% dplyr::pull(share) %>% scales::percent()}</span><br> of all<span style = 'color:#CBA049;font-size:18pt'>{dplyr::if_else(team =='global','',as.character(glue::glue(' {get_last_name(team)}')))}</span> shots taken in the time span"),
                   caption = glue::glue("Visualisation by Henri Freixe • Sources : Nba.com, Basketball-reference.com")) +
     ggplot2::scale_fill_identity(guide = "legend",
                                  labels = c("Mid-range<br>shooting frequency","3 point<br>shooting frequency")) +
@@ -378,7 +378,7 @@ team_logo <- function(team = 'global', width = 50) {
                          ) +
                          ggplot2::coord_cartesian() +
                          theme_dark_cap() +
-                         ggplot2::theme(plot.background = element_rect(fill = "transparent",color = "transparent"),
+                         ggplot2::theme(plot.background = ggplot2::element_rect(fill = "transparent",color = "transparent"),
                                         panel.background = ggplot2::element_rect(fill = "transparent", color = "transparent"),
                                         panel.grid = ggplot2::element_blank(),
                                         panel.border = ggplot2::element_blank(),

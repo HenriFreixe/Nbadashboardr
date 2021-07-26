@@ -131,8 +131,10 @@ get_scoring_rate <- function(season = "2020-21", team = 'global') {
 plot_scoring_rate <- function(season = "2020-21",team = "global") {
 
 
-  future::plan(future::multisession)
-  future::`%<-%`(team_logo,team_logo(team))
+
+  #future::plan(future::multisession)
+  #future::futureAssign("team_logo",team_logo(team))
+  team_logo <- team_logo(team)
 
   df <- get_scoring_rate(season,team)
   eff_color <- '#de425b'
