@@ -17,7 +17,7 @@ mod_scoring_perf_selector_ui <- function(id){
     column(6,
            selectInput(ns("team"),
                        label="Select a Team :",
-                       choices=scope_teams()))
+                       choices=scope_teams(type = "no")))
   )
 }
 

@@ -13,7 +13,7 @@ mod_off_eff_selector_ui <- function(id){
     column(12,
            selectInput(ns("team"),
                        label = "Select a specific Team :",
-                       choices = c(scope_teams(type = "teams"))))
+                       choices = scope_teams(type = "average")))
 
   )
 }

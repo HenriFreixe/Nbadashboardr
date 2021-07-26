@@ -21,7 +21,7 @@ mod_win_correlation_selector_ui <- function(id){
     column(4,
            selectInput(ns("team"),
                        label="Highlight a specific team :",
-                       choices=scope_teams(type = "teams")))
+                       choices=scope_teams(type = "regular")))
   )
 }
 

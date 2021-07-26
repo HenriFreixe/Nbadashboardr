@@ -22,6 +22,9 @@ scope_seasons <- function() {
 
 }
 
+
+
+
 scope_teams <- function(season = "2020-21", current = TRUE, type = "regular"){
 
   df <- get_team_standings(season)
@@ -34,8 +37,14 @@ teams <- df$team_name
 
 if (type == "regular") {
 return(teams)
+} else { if (type == "average") {
+  teams_average <- c("global",teams)
+  names(teams_average) <- c("League Average",teams)
+  return(teams_average)
 } else {
-  return(c("global",teams))
+  teams_no <- c("global",teams)
+  names(teams_no <- c("No Specific Team Highlighted",teams))
+  return(teams_no)
 }
-
+}
 }
