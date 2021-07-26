@@ -397,15 +397,17 @@ plot_off_evo_interactive <- function(start_season = "2011-12",end_season = "2020
 
 
   future::plan(future::multisession)
-  future::`%globals%`(future::`%<-%`(A,off_rating_evo_interactive(start_season, end_season, team)),structure(TRUE, add = c("get_last_name")))
-  future::`%globals%`(future::`%<-%`(B,shot_frequency(start_season,end_season,team)),structure(TRUE, add = c("get_last_name")))
 
-  future::`%<-%`(team_logo,team_logo(team))
+  a <- furrr::future_invoke_map(.f = list(off_rating_evo_interactive,shot_frequency,team_logo),.x = list(c(start_season, end_season, team),c(start_season, end_season, team),c(team)))
+
+  #future::`%globals%`(future::`%<-%`(A,off_rating_evo_interactive(start_season, end_season, team)),structure(TRUE, add = c("get_last_name")))
+  #future::`%globals%`(future::`%<-%`(B,shot_frequency(start_season,end_season,team)),structure(TRUE, add = c("get_last_name")))
+  #future::`%<-%`(team_logo,team_logo(team))
 
 
-  plot <- (A / B) & ggplot2::theme(plot.background = ggplot2::element_rect(fill = court_themes('court'),color = court_themes('court')))
+  plot <- (a[[1]] / a[[2]]) & ggplot2::theme(plot.background = ggplot2::element_rect(fill = court_themes('court'),color = court_themes('court')))
 
-  plot_with_logo <- plot + patchwork::inset_element(team_logo, left = -0.075, top = 2.45, right = 0.125, bottom = 2.25)
+  plot_with_logo <- plot + patchwork::inset_element(a[[3]], left = -0.075, top = 2.45, right = 0.125, bottom = 2.25)
 
   ggiraph::girafe(ggobj = plot_with_logo,
                   width_svg = 12,

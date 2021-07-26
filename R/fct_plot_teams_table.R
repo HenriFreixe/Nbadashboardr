@@ -55,9 +55,10 @@ get_playoff_teams <- function(season = "2020-21") {
 get_prev_standings <- function(season = "2020-21", conf = "both") {
 
   prev_season_begin <- stringr::str_sub(season,end = 4) %>% as.integer()-1
-  prev_season_end <- stringr::str_sub(season,start = 6) %>% as.integer()-1
+  prev_season_end <- stringr::str_sub(glue::glue('20{stringr::str_sub(season,start = 6)}') %>% as.integer()-1,start = 3)
 
-  df <- get_team_standings(glue::glue("{prev_season_begin}-{prev_season_end}"))
+
+  df <- get_team_standings(season = as.character(glue::glue("{prev_season_begin}-{prev_season_end}")))
 
   if (conf == "both") {
     df %>%
@@ -70,10 +71,7 @@ get_prev_standings <- function(season = "2020-21", conf = "both") {
       dplyr::select(team_name, previous_rank = rank)
   }
 
-
 }
-
-
 
 
 
@@ -235,7 +233,7 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
                      domain = c("",glue::glue("<span style = 'color:#404040'>{fontawesome::fa('trophy')}</span>"))
                    )) %>%
     ## IMAGES --------------------------------------------------------------------
-  gt::text_transform(locations = gt::cells_body(vars(logo,image)),
+  gt::text_transform(locations = gt::cells_body(gt::vars(logo,image)),
                      fn = function(x) {
                        gt::web_image(url = x, height = gt::px(35))
                      }) %>%
@@ -244,8 +242,8 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
     gt::fmt_percent(columns = c("w_pct"), decimals = 1) %>%
     gt::fmt(columns = c("net_rating"),
             fns = function(x){
-              if_else(x>0, glue::glue("<span style = 'color:#02af74'>+{x}</span>"),
-                      if_else(x ==0, glue::glue("<span style = 'color:#b3b3b3'>=</span>"),glue::glue("<span style = 'color:#fc7042'>{x}</span>")))
+              dplyr::if_else(x>0, glue::glue("<span style = 'color:#02af74'>+{x}</span>"),
+                      dplyr::if_else(x ==0, glue::glue("<span style = 'color:#b3b3b3'>=</span>"),glue::glue("<span style = 'color:#fc7042'>{x}</span>")))
             }) %>%
     gt::opt_table_font(font = list(
       gt::google_font("Manrope"),
@@ -323,7 +321,7 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
         gt::cell_borders(
           sides = "bottom",
           color = "#0D0D0D",
-          weight = px(2)
+          weight = gt::px(2)
         )
       ),
       locations = list(

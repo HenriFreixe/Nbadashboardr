@@ -13,11 +13,11 @@ mod_shot_chart_selector_ui <- function(id){
     column(6,
            selectInput(ns("season"),
                        label="Select a Season :",
-                       choices=glue::glue("{seq(2000,2020)}-{stringr::str_sub(seq(2000,2020)+1,start = -2)}"))),
+                       choices = scope_seasons())),
     column(6,
            selectInput(ns("player"),
-                       label="Select a Player :",
-                       choices=c("LeBron James","Kevin Durant","Stephen Curry","Kawhi Leonard")))
+                       label = "Select a Player :",
+                       choices = c("LeBron James","Kevin Durant","Stephen Curry","Kawhi Leonard")))
     )
 }
 

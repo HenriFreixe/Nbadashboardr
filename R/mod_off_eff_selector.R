@@ -12,8 +12,8 @@ mod_off_eff_selector_ui <- function(id){
   fluidRow(
     column(12,
            selectInput(ns("team"),
-                       label="Select a specific Team :",
-                       choices=c("League Average",get_team_standings()$team_name)))
+                       label = "Select a specific Team :",
+                       choices = c(scope_teams(type = "teams"))))
 
   )
 }

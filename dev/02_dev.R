@@ -82,6 +82,7 @@ golem::add_fct( "plot_win_correlation" )
 golem::add_fct( "plot_teams_table" )
 golem::add_fct( "plot_season_recap" )
 golem::add_utils( "theming" )
+golem::add_utils( "inputs" )
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
