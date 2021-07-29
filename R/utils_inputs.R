@@ -48,3 +48,12 @@ return(teams)
 }
 }
 }
+
+
+scope_players <- function(season = "2020-21") {
+
+  df <- get_bpm_join(season)
+
+  return(df$player_name)
+
+}
