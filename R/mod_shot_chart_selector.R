@@ -15,12 +15,9 @@ mod_shot_chart_selector_ui <- function(id){
                        label="Select a Season :",
                        choices = scope_seasons())),
     column(6,
-           selectInput(ns("player"),
-                       label = "Select a Player :",
-                       choices = c("LeBron James","Kevin Durant","Stephen Curry","Kawhi Leonard")))
+           uiOutput(ns("secondSelection")))
     )
 }
-
 
 
 
@@ -31,10 +28,12 @@ mod_shot_chart_selector_server <- function(id){
   moduleServer( id, function(input, output, session){
     return(
       list(
-        player = reactive({input$player}),
         season = reactive({input$season})
       )
     )
+        output$secondSelection <- renderUI({selectInput(ns("player"),
+                                               "Select a Player :",
+                                               choices = scope_players(season))})
   })
 }
 
