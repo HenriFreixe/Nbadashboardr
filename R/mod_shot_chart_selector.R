@@ -26,14 +26,16 @@ mod_shot_chart_selector_ui <- function(id){
 #' @noRd
 mod_shot_chart_selector_server <- function(id){
   moduleServer( id, function(input, output, session){
-    return(
-      list(
-        season = reactive({input$season})
-      )
-    )
-        output$secondSelection <- renderUI({selectInput(ns("player"),
+
+        output$secondSelection <- renderUI({selectInput("player",
                                                "Select a Player :",
-                                               choices = scope_players(season))})
+                                               choices = scope_players(input$season))})
+        return(
+          list(
+            season = reactive({input$season}),
+            player = reactive({input$player})
+          )
+        )
   })
 }
 

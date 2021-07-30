@@ -65,8 +65,7 @@ golem::add_module( name = "teams_table_selector" ) # Name of the module
 golem::add_module( name = "season_recap_plotter" ) # Name of the module
 golem::add_module( name = "season_recap_selector" ) # Only season input
 
-### Adding player inputs
-### Adding reactivity within UI
+### Adding player inputs - On verra pour du javascript, pour le moment top 200 BPM
 ### Adding a button to launch
 
 

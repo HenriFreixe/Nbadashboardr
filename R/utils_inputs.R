@@ -57,3 +57,26 @@ scope_players <- function(season = "2020-21") {
   return(df$player_name)
 
 }
+
+
+scope_variables <- function(plot_type) {
+
+  player_rank <- c("pts","reb","ast","blk","stl","bpm")
+  names(player_rank) <- c("Points per Game","Rebounds per Game","Assists per Game","Blocks per Game","Steals per Game","Box Plus-Minus")
+
+  player_table <- c("pts","reb","ast","blk","stl","bpm")
+  names(player_table) <- c("Points per Game","Rebounds per Game","Assists per Game","Blocks per Game","Steals per Game","Box Plus-Minus")
+
+  win_pct <- c("salary", "off_eff", "def_eff")
+  names(win_pct) <- c("Salary", "Offensive Efficiency", "Defensive Efficiency")
+
+if (plot_type == 'player_rank') {
+  return(player_rank)
+}else {
+  if (plot_type == 'player_table') {
+return(player_table)
+  }else {
+    return(win_pct)
+  }
+}
+}
