@@ -43,7 +43,7 @@ return(teams)
   return(teams_average)
 } else {
   teams_no <- c("global",teams)
-  names(teams_no <- c("No Specific Team Highlighted",teams))
+  names(teams_no) <- c("No Specific Team Highlighted",teams)
   return(teams_no)
 }
 }
