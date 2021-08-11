@@ -9,20 +9,24 @@
 #' @importFrom shiny NS tagList
 mod_win_correlation_selector_ui <- function(id){
   ns <- NS(id)
-  fluidRow(
+  wellPanel(fluidRow(
     column(4,
            selectInput(ns("season"),
-                       label="Select a Season :",
-                       choices=scope_seasons())),
+                       label="Select a Season",
+                       choices=scope_seasons(),
+                       selected = "2020-21")),
     column(4,
            selectInput(ns("variable"),
-                       label="Select a Variable to Correlate to Win Percentage :",
-                       choices=c("Salary","Offensive Efficiency","Defensive Efficiency"))),
+                       label="Select a Variable",
+                       choices=scope_variables("win_pct"),
+                       selected = "salary")),
     column(4,
            selectInput(ns("team"),
-                       label="Highlight a specific team :",
-                       choices=scope_teams(type = "regular")))
-  )
+                       label="Highlight a team",
+                       choices=scope_teams(type = "regular"),
+                       selected = "Phoenix Suns"))
+  ),
+  actionButton(ns("change"),"Visualize"))
 }
 
 #' win_correlation_selector Server Functions
@@ -34,7 +38,8 @@ mod_win_correlation_selector_server <- function(id){
       list(
         season = reactive({input$season}),
         variable = reactive({input$variable}),
-        team = reactive({input$team})
+        team = reactive({input$team}),
+        change = reactive({input$change})
       )
     )
 

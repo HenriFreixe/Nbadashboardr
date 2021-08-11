@@ -9,13 +9,15 @@
 #' @importFrom shiny NS tagList
 mod_season_recap_selector_ui <- function(id){
   ns <- NS(id)
-  fluidRow(
+  wellPanel(fluidRow(
     column(12,
            selectInput(ns("season"),
-                       label="Select a Season :",
-                       choices=scope_season()))
+                       label="Select a Season",
+                       choices=scope_seasons(),
+                       selected = "2020-21"))
 
-  )
+  ),
+  actionButton(ns("change"),"Visualize"))
 }
 
 #' season_recap_selector Server Functions
@@ -25,7 +27,8 @@ mod_season_recap_selector_server <- function(id){
   moduleServer( id, function(input, output, session){
     return(
       list(
-        season = reactive({input$season})
+        season = reactive({input$season}),
+        change = reactive({input$change})
       )
     )
 

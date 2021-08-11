@@ -507,7 +507,7 @@ plot_court <- function(player,
                           label.color = NA,
                           label.padding = grid::unit(rep(0,4),"pt")) +
     ggplot2::labs(title = glue::glue("{player} Shooting Profile <span style='color:#CBA049;'>| {season}</span>" ),
-                  subtitle = glue::glue("**{get_last_name(player)} scored <span style='color:#CBA049;font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(pts)}</span> points per game,<br> on <span style='color:{get_subtitles_tbl(player,season) %>% dplyr::pull(color_fg2)};font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(fg2_pct) %>% round(digits = 3)*100}%</span> from 2 point shots and <span style='color:{get_subtitles_tbl(player,season) %>% dplyr::pull(color_fg3)};font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(fg3_pct)%>% round(digits = 3)*100}%</span> from threes**")) +
+                  subtitle = glue::glue("{get_last_name(player)} scored <span style='color:#CBA049;font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(pts)}</span> points per game,<br> on <span style='color:{get_subtitles_tbl(player,season) %>% dplyr::pull(color_fg2)};font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(fg2_pct) %>% round(digits = 3)*100}%</span> from 2 point shots and <span style='color:{get_subtitles_tbl(player,season) %>% dplyr::pull(color_fg3)};font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(fg3_pct)%>% round(digits = 3)*100}%</span> from threes")) +
     ggplot2::guides(fill = FALSE,
                     size = FALSE) +
     ggplot2::scale_size_identity() +
@@ -614,7 +614,7 @@ plot_court <- function(player,
 
   legend <- accuracy_legend + volume_legend + patchwork::plot_layout(widths = c(1.2,0.8))
 
-  (shot_chart / legend + patchwork::plot_layout(heights = c(1,.075))) +
+  plot <- (shot_chart / legend + patchwork::plot_layout(heights = c(1,.075))) +
     patchwork::plot_annotation(caption = glue::glue("Inspiration from Kirk Goldsberry's and Owen Philipp's shot charts<br>Visualisation by Henri Freixe • Sources : Nba.com")) & ggplot2::theme(plot.background = ggplot2::element_rect(fill = court_themes('court'),color = court_themes('court')),
                                                                                                                                                                                        plot.margin = ggplot2::margin(t=0,r=0,b=5.5,l=0,unit = "pt"),
                                                                                                                                                                                        plot.caption = ggtext::element_markdown(size = 9,
@@ -623,7 +623,11 @@ plot_court <- function(player,
                                                                                                                                                                                                                                margin = ggplot2::margin(t = 5,
                                                                                                                                                                                                                                                         b = 20,
                                                                                                                                                                                                                                                         r = 30)))
-
+  ggiraph::girafe(ggobj = plot,
+                  width_svg = 12,
+                  height_svg = 12,
+                  options = list(ggiraph::opts_toolbar(saveaspng = FALSE),
+                                 ggiraph::opts_sizing(rescale = FALSE)))
 }
 
 
@@ -663,7 +667,7 @@ plot_court_alternative <- function(player,
                           label.color = NA,
                           label.padding = grid::unit(rep(0,4),"pt")) +
     ggplot2::labs(title = glue::glue("{player} Shooting Profile <span style='color:#CBA049;'>| {season}</span>" ),
-                  subtitle = glue::glue("**{get_last_name(player)} scored <span style='color:#CBA049;font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(pts)}</span> points per game,<br> on <span style='color:{get_subtitles_tbl(player,season) %>% dplyr::pull(color_fg2)};font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(fg2_pct) %>% round(digits = 3)*100}%</span> from 2 point shots and <span style='color:{get_subtitles_tbl(player,season) %>% dplyr::pull(color_fg3)};font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(fg3_pct)%>% round(digits = 3)*100}%</span> from threes**")) +
+                  subtitle = glue::glue("{get_last_name(player)} scored <span style='color:#CBA049;font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(pts)}</span> points per game,<br> on <span style='color:{get_subtitles_tbl(player,season) %>% dplyr::pull(color_fg2)};font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(fg2_pct) %>% round(digits = 3)*100}%</span> from 2 point shots and <span style='color:{get_subtitles_tbl(player,season) %>% dplyr::pull(color_fg3)};font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(fg3_pct)%>% round(digits = 3)*100}%</span> from threes")) +
     ggplot2::guides(fill = FALSE,
                     size = FALSE) +
     ggplot2::scale_size_continuous(range = c(0.001,25)) +

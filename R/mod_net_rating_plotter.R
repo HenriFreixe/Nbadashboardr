@@ -9,17 +9,24 @@
 #' @importFrom shiny NS tagList
 mod_net_rating_plotter_ui <- function(id){
   ns <- NS(id)
-  girafeOutput(ns("plot"))
+  shinycustomloader::withLoader(ggiraph::girafeOutput(ns("plot")),
+                                type = "html",
+                                loader = "dnaspin")
 }
 
 #' net_rating_plotter Server Functions
 #'
 #' @noRd
-mod_net_rating_plotter_server <- function(id){
+mod_net_rating_plotter_server <- function(id, net_rating){
   moduleServer( id, function(input, output, session){
-    output$plot <- renderGirafe({
-      plot_teams_efficiency_interactive(season = net_rating$season())
-    })
+
+    change_plot <- eventReactive(net_rating$change(),
+                                 {plot_teams_efficiency_interactive(season = net_rating$season())}
+    )
+
+
+      output$plot <- ggiraph::renderGirafe(
+        expr = change_plot())
   })
 }
 

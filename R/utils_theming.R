@@ -42,7 +42,7 @@ court_themes <- function(var) {
   df <- tibble::tibble(court = 'grey20',
                        lines = '#999999',
                        font = 'Kiwi Maru',
-                       bg_table_markdown = "#F3F3F3")
+                       bg_table_markdown = "#E8E8E8")
   df %>% dplyr::pull(var)
 }
 

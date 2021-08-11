@@ -9,16 +9,23 @@
 #' @importFrom shiny NS tagList
 mod_off_eff_plotter_ui <- function(id){
   ns <- NS(id)
-  girafeOutput(ns("plot"))
+  shinycustomloader::withLoader(ggiraph::girafeOutput(ns("plot")),
+                                type = "html",
+                                loader = "dnaspin")
 }
 
 #' off_eff_plotter Server Functions
 #'
 #' @noRd
-mod_off_eff_plotter_server <- function(id){
+mod_off_eff_plotter_server <- function(id, off_eff){
   moduleServer( id, function(input, output, session){
-    output$plot <- renderGirafe({
-      plot_teams_efficiency_interactive(team = off_eff$team())
+
+    change_plot <- eventReactive(off_eff$change(),
+                                 {plot_off_evo_interactive(team = off_eff$team())}
+    )
+
+    output$plot <- ggiraph::renderGirafe({
+      change_plot()
     })
 
   })

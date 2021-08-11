@@ -9,18 +9,24 @@
 #' @importFrom shiny NS tagList
 mod_players_table_plotter_ui <- function(id){
   ns <- NS(id)
-  gt_output("table")
+  shinycustomloader::withLoader(gt::gt_output(ns("table")),
+  type = "html",
+  loader = "dnaspin")
 }
 
 #' players_table_plotter Server Functions
 #'
 #' @noRd
-mod_players_table_plotter_server <- function(id){
+mod_players_table_plotter_server <- function(id, players_table){
   moduleServer( id, function(input, output, session){
-    output$table <- render_gt({
-      plot_players_table(variable = players_table$variable(),
-                                      season = players_table$season())
-    })
+
+change_plot <- eventReactive(players_table$change(),
+                             {plot_players_table(season = players_table$season(),
+                                                 variable = players_table$variable())})
+
+    output$table <- gt::render_gt({
+      change_plot()}
+    )
 
   })
 }

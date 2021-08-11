@@ -9,19 +9,25 @@
 #' @importFrom shiny NS tagList
 mod_win_correlation_plotter_ui <- function(id){
   ns <- NS(id)
-  plotOutput(ns("plot"))
+  shinycustomloader::withLoader(ggiraph::girafeOutput(ns("plot")),
+  type = "html",
+  loader = "dnaspin")
 }
 
 #' win_correlation_plotter Server Functions
 #'
 #' @noRd
-mod_win_correlation_plotter_server <- function(id){
+mod_win_correlation_plotter_server <- function(id, win_correlation){
   moduleServer( id, function(input, output, session){
-    output$plot <- renderPlot({
-      plot_off_eff(season = win_correlation$season(),
-                   variable = win_correlation$variable(),
-                   team = win_correlation$team())
-    })
+
+    change_plot <- eventReactive(win_correlation$change(),
+                                 {plot_bump_chart(season = win_correlation$season(),
+                                                  variable = win_correlation$variable(),
+                                                  team = win_correlation$team())}
+    )
+
+    output$plot <- ggiraph::renderGirafe(
+      expr = change_plot())
 
   })
 }

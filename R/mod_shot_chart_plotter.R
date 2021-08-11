@@ -9,19 +9,28 @@
 #' @importFrom shiny NS tagList
 mod_shot_chart_plotter_ui <- function(id){
   ns <- NS(id)
-  plotOutput(ns("plot"))
+
+  shinycustomloader::withLoader(ggiraph::girafeOutput(ns("plot")),
+  type = "html",
+  loader = "dnaspin")
 }
 
 #' shot_chart_plotter Server Function
 #'
 #' @noRd
-mod_shot_chart_plotter_server <- function(id){
+mod_shot_chart_plotter_server <- function(id, shot_chart){
   moduleServer(id, function(input, output, session) {
-    output$plot <- renderPlot({
-      plot_court(player = shot_chart$player(),
-                 season = shot_chart$season(),
-                        summary = TRUE)
-    })
+
+
+    change_plot <- eventReactive(shot_chart$change(),
+                                 {plot_court(player = shot_chart$player(),
+                                             season = shot_chart$season(),
+                                             summary = TRUE)}
+                            )
+
+    output$plot <- ggiraph::renderGirafe(
+      change_plot()
+    )
   })
 }
 

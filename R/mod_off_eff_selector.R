@@ -9,13 +9,15 @@
 #' @importFrom shiny NS tagList
 mod_off_eff_selector_ui <- function(id){
   ns <- NS(id)
-  fluidRow(
+  wellPanel(fluidRow(
     column(12,
            selectInput(ns("team"),
-                       label = "Select a specific Team :",
-                       choices = scope_teams(type = "average")))
+                       label = "Select a specific Team",
+                       choices = scope_teams(type = "average"),
+                       selected = "global"))
 
-  )
+  ),
+  actionButton(ns("change"),"Visualize"))
 }
 
 #' off_eff_selector Server Functions
@@ -25,7 +27,8 @@ mod_off_eff_selector_server <- function(id){
   moduleServer( id, function(input, output, session){
     return(
       list(
-        team = reactive({input$team})
+        team = reactive({input$team}),
+        change = reactive({input$change})
       )
     )
 

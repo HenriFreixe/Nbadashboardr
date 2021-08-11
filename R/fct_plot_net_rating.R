@@ -370,6 +370,8 @@ plot_teams_efficiency_interactive <- function(season = "2020-21") {
                   width_svg = 12,
                   height_svg = 12,
                   options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
-                                 ggiraph::opts_hover(css = "fill:red;")))
+                                 ggiraph::opts_hover(css = "fill:red;"),
+                                 ggiraph::opts_toolbar(saveaspng = FALSE),
+                                 ggiraph::opts_sizing(rescale = FALSE)))
 
 }

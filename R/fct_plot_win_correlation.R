@@ -291,6 +291,11 @@ plot_bump_chart <- function(season = '2020-21',team = 'global', variable = 'sala
                    legend.background = ggplot2::element_blank())
 
   plot_with_logo <- plot + patchwork::inset_element(team_logo(team, width = 70), left = 0.025, top = 1.175, right = 0.150, bottom = 1.060)
-  return(plot_with_logo)
+
+  ggiraph::girafe(ggobj = plot_with_logo,
+                  width_svg = 16,
+                  height_svg = 12,
+                  options = list(ggiraph::opts_toolbar(saveaspng = FALSE),
+                                 ggiraph::opts_sizing(rescale = FALSE)))
 
 }

@@ -9,17 +9,23 @@
 #' @importFrom shiny NS tagList
 mod_teams_table_plotter_ui <- function(id){
   ns <- NS(id)
-  gt_output(ns("table"))
+  shinycustomloader::withLoader(gt::gt_output(ns("table")),
+  type = "html",
+  loader = "dnaspin")
 }
 
 #' teams_table_plotter Server Functions
 #'
 #' @noRd
-mod_teams_table_plotter_server <- function(id){
+mod_teams_table_plotter_server <- function(id, teams_table){
   moduleServer( id, function(input, output, session){
-    output$table <- render_gt({
-      plot_players_table(conference = teams_table$conference(),
-                         season = teams_table$season())
+
+    change_plot <- eventReactive(teams_table$change(),
+                                 {plot_teams_table(conf = teams_table$conference(),
+                                                   season = teams_table$season())})
+
+    output$table <- gt::render_gt({
+      change_plot()
     })
 
   })

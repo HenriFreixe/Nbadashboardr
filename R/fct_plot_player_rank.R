@@ -281,7 +281,7 @@ plot_player_ranking_interactive <- function(season = "2020-21", variable = "bpm"
 
         pre_title <- "Most prolific <span style ='color:#de425b'>Passers</span> in the League (Assists per Game)"
 
-        subtitle <- glue::glue("<span style =' color:#CBA049;font-size:18pt'>{df %>% head(1) %>% pull(player_name)}</span> led the league in passing with <span style =' color:#CBA049;font-size:18pt'>{df %>% head(1) %>% pull(.data[[variable]])}</span> assists per game")
+        subtitle <- glue::glue("<span style =' color:#CBA049;font-size:18pt'>{df %>% head(1) %>% dplyr::pull(player_name)}</span> led the league in passing with <span style =' color:#CBA049;font-size:18pt'>{df %>% head(1) %>% dplyr::pull(.data[[variable]])}</span> assists per game")
 
         y_label <- "Assists per Game"
 
@@ -477,6 +477,8 @@ plot_player_ranking_interactive <- function(season = "2020-21", variable = "bpm"
                   width_svg = 16,
                   height_svg = 12,
                   options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
-                                 ggiraph::opts_hover(css = "fill:red;")))
+                                 ggiraph::opts_hover(css = "fill:red;"),
+                                 ggiraph::opts_toolbar(saveaspng = FALSE),
+                                 ggiraph::opts_sizing(rescale = FALSE)))
 
 }

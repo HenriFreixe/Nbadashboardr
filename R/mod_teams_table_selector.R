@@ -9,19 +9,22 @@
 #' @importFrom shiny NS tagList
 mod_teams_table_selector_ui <- function(id){
   ns <- NS(id)
-  fluidRow(
+  wellPanel(fluidRow(
     column(6,
            selectInput(ns("season"),
-                       label="Select a Season :",
-                       choices=scope_seasons())),
+                       label="Select a Season",
+                       choices=scope_seasons(),
+                       selected = "2020-21")),
     column(6,
            selectInput(ns("conference"),
-                       label="Select a Conference :",
-                       choices=c("Both Conferences","Eastern Conference","Western Conference")))
-  )
+                       label="Select a Conference",
+                       choices=c("Both Conferences" = "both","Eastern Conference" ="East","Western Conference"="West"),
+                       selected = "both"))
+  ),
+  actionButton(ns("change"),"Visualize"))
 }
 
-#' teams_table_selector Server Functions
+#' teams_table_selector Server Functionsboth
 #'
 #' @noRd
 mod_teams_table_selector_server <- function(id){
@@ -29,7 +32,8 @@ mod_teams_table_selector_server <- function(id){
     return(
       list(
         season = reactive({input$season}),
-        conference = reactive({input$conference})
+        conference = reactive({input$conference}),
+        change = reactive({input$change})
       )
     )
 

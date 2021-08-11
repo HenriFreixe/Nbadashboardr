@@ -422,7 +422,9 @@ plot_season_recap <- function(season = "2018-19") {
                   width_svg = 10,
                   height_svg = 34,
                   options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
-                                 ggiraph::opts_hover(css = "fill:red;")))
+                                 ggiraph::opts_toolbar(saveaspng = FALSE),
+                                 ggiraph::opts_hover(css = "fill:red;"),
+                                 ggiraph::opts_sizing(rescale = FALSE)))
 
 
 }

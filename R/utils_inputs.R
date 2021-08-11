@@ -52,7 +52,10 @@ return(teams)
 
 scope_players <- function(season = "2020-21") {
 
-  df <- get_bpm_join(season)
+  df <- get_traditional_stats(season) %>%
+    dplyr::arrange(dplyr::desc(nba_fantasy_pts)) %>%
+    head(200)
+
 
   return(df$player_name)
 
@@ -73,7 +76,7 @@ scope_variables <- function(plot_type) {
 if (plot_type == 'player_rank') {
   return(player_rank)
 }else {
-  if (plot_type == 'player_table') {
+  if (plot_type == 'players_table') {
 return(player_table)
   }else {
     return(win_pct)

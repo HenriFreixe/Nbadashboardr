@@ -398,7 +398,7 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
   if (season == "2020-21") {
     table <- table %>% gt::tab_footnote(
       footnote = gt::md(glue::glue("{season} NBA Season has yet to crown an NBA Champion")),
-      locations = cgt::ells_column_labels(columns = gt::vars(playoffs,champion)))
+      locations = gt::cells_column_labels(columns = gt::vars(playoffs,champion)))
 
   }else {
     table <- table

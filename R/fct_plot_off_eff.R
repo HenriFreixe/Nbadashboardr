@@ -413,6 +413,8 @@ plot_off_evo_interactive <- function(start_season = "2011-12",end_season = "2020
                   width_svg = 12,
                   height_svg = 12,
                   options = list(ggiraph::opts_tooltip(use_fill = TRUE),
-                                 ggiraph::opts_hover(css = "fill:red;")))
+                                 ggiraph::opts_hover(css = "fill:red;"),
+                                 ggiraph::opts_toolbar(saveaspng = FALSE),
+                                 ggiraph::opts_sizing(rescale = FALSE)))
 
 }

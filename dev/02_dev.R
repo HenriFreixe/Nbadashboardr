@@ -40,6 +40,7 @@ usethis::use_package( "gt" )
 usethis::use_package( "htmltools" )
 usethis::use_package( "future" )
 usethis::use_package( "shiny" )
+usethis::use_package( "shinycustomloader" )
 usethis::use_pipe()
 devtools::document()
 

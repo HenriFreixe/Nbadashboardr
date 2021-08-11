@@ -9,16 +9,19 @@
 #' @importFrom shiny NS tagList
 mod_scoring_perf_selector_ui <- function(id){
   ns <- NS(id)
-  fluidRow(
+  wellPanel(fluidRow(
     column(6,
            selectInput(ns("season"),
-                       label="Select a Season :",
-                       choices=scope_seasons())),
+                       label="Select a Season",
+                       choices=scope_seasons(),
+                       selected = "2020-21")),
     column(6,
            selectInput(ns("team"),
-                       label="Select a Team :",
-                       choices=scope_teams(type = "no")))
-  )
+                       label="Select a Team",
+                       choices=scope_teams(type = "no"),
+                       selected = "global"))
+  ),
+  actionButton(ns("change"),"Visualize"))
 }
 
 #' scoring_perf_selector Server Functions
@@ -29,7 +32,8 @@ mod_scoring_perf_selector_server <- function(id){
     return(
       list(
         team = reactive({input$team}),
-        season = reactive({input$season})
+        season = reactive({input$season}),
+        change = reactive({input$change})
       )
     )
 

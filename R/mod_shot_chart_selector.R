@@ -9,14 +9,19 @@
 #' @importFrom shiny NS tagList
 mod_shot_chart_selector_ui <- function(id){
   ns <- NS(id)
-  fluidRow(
+  wellPanel(fluidRow(
     column(6,
            selectInput(ns("season"),
-                       label="Select a Season :",
-                       choices = scope_seasons())),
+                       label="Select a Season",
+                       choices = scope_seasons(),
+                       selected = "2020-21")),
     column(6,
-           uiOutput(ns("secondSelection")))
-    )
+           selectInput(ns("player"),
+                       label = "Select a Player",
+                       choices = scope_players("2020-21"),
+                       selected = "Stephen Curry"))
+    ),
+    actionButton(ns("change"),"Visualize"))
 }
 
 
@@ -27,13 +32,23 @@ mod_shot_chart_selector_ui <- function(id){
 mod_shot_chart_selector_server <- function(id){
   moduleServer( id, function(input, output, session){
 
-        output$secondSelection <- renderUI({selectInput("player",
-                                               "Select a Player :",
-                                               choices = scope_players(input$season))})
+        #output$secondSelection <- renderUI({selectInput(session$ns("player"),
+        #                                       "Select a Player",
+        #                                       choices = scope_players(input$season),
+        #                                       selected = "Stephen Curry")})
+
+
+
+    observeEvent(input$season,
+                 {updateSelectInput(session,
+                                   "player",
+                                   label = "Select a Player",
+                                   choices = scope_players(input$season))})
         return(
           list(
             season = reactive({input$season}),
-            player = reactive({input$player})
+            player = reactive({input$player}),
+            change = reactive({input$change})
           )
         )
   })

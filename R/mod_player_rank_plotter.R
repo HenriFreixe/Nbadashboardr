@@ -9,17 +9,23 @@
 #' @importFrom shiny NS tagList
 mod_player_rank_plotter_ui <- function(id){
   ns <- NS(id)
-  girafeOutput(ns("plot"))
+  shinycustomloader::withLoader(ggiraph::girafeOutput(ns("plot")),
+  type = "html",
+  loader = "dnaspin")
 }
 
 #' player_rank_plotter Server Functions
 #'
 #' @noRd
-mod_player_rank_plotter_server <- function(id){
+mod_player_rank_plotter_server <- function(id, player_rank){
   moduleServer( id, function(input, output, session){
-    output$plot <- renderGirafe({
-      plot_player_ranking_interactive(variable = player_rank$variable(),
-                 season = player_rank$season())
+
+    change_plot <- eventReactive(player_rank$change(),
+                                 {plot_player_ranking_interactive(variable = player_rank$variable(),
+                                                                  season = player_rank$season())})
+
+    output$plot <- ggiraph::renderGirafe({
+      change_plot()
     })
 
   })
