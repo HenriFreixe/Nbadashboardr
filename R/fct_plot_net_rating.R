@@ -252,7 +252,7 @@ get_team_advanced_interactive <- function(season = "2020-21") {
                   off_rating_rank = dplyr::min_rank(dplyr::desc(off_rating)) %>% scales::ordinal(),
                   def_rating_rank = dplyr::min_rank(def_rating) %>% scales::ordinal(),
                   net_rating_rank = dplyr::min_rank(dplyr::desc(net_rating)) %>% scales::ordinal()) %>%
-    dplyr::mutate(tooltip_label = glue::glue("<div style = 'font-family:Kiwi Maru;color:white;padding:5px;border-radius:4px;border-style:solid;border-color:{champion};border-width:2px;background-color:{fill_box};'><strong style = 'font-size:10pt'>{team_name}</strong><hr style='margin-top:5px;margin-bottom:1px;border:0;height:0;border-top:1px solid rgba(0,0,0,0.1);border-bottom:1px solid rgba(255,255,255,0.3);'/><span style = 'font-size:10pt'>Offensive efficiency : {off_rating} ({off_rating_rank})<br>Defensive efficiency : {def_rating} ({def_rating_rank}) <br>Net efficiency : {net_rating_display} ({net_rating_rank})</span></div>"))
+    dplyr::mutate(tooltip_label = glue::glue("<div style = 'font-family:{court_themes('font')};color:white;padding:5px;border-radius:4px;border-style:solid;border-color:{champion};border-width:2px;background-color:{fill_box};'><strong style = 'font-size:10pt'>{team_name}</strong><hr style='margin-top:5px;margin-bottom:1px;border:0;height:0;border-top:1px solid rgba(0,0,0,0.1);border-bottom:1px solid rgba(255,255,255,0.3);'/><span style = 'font-size:10pt'>Offensive efficiency : {off_rating} ({off_rating_rank})<br>Defensive efficiency : {def_rating} ({def_rating_rank}) <br>Net efficiency : {net_rating_display} ({net_rating_rank})</span></div>"))
 }
 
 
@@ -283,7 +283,7 @@ plot_teams_efficiency_interactive <- function(season = "2020-21") {
                       x = mean(off_rating),
                       y = (mean(def_rating) - max(max_ratings))*.99,
                       label = "High Defensive Efficiency",
-                      family = "Kiwi Maru",
+                      family = court_themes('font'),
                       size = 12,
                       alpha = .75,
                       color = "grey10") +
@@ -291,7 +291,7 @@ plot_teams_efficiency_interactive <- function(season = "2020-21") {
                       x = (mean(off_rating) + max(max_ratings))*1.01,
                       y = mean(def_rating),
                       label = "High Offensive Efficiency",
-                      family = "Kiwi Maru",
+                      family = court_themes('font'),
                       size = 12,
                       alpha = .75,
                       angle = 90,
@@ -300,7 +300,7 @@ plot_teams_efficiency_interactive <- function(season = "2020-21") {
                       x = (mean(off_rating) - max(max_ratings))*0.99,
                       y = mean(def_rating),
                       label = "Low Offensive Efficiency",
-                      family = "Kiwi Maru",
+                      family = court_themes('font'),
                       size = 12,
                       alpha = .75,
                       angle = 90,
@@ -309,7 +309,7 @@ plot_teams_efficiency_interactive <- function(season = "2020-21") {
                       x = mean(off_rating),
                       y = (mean(def_rating) + max(max_ratings))*1.01,
                       label = "Low Defensive Efficiency",
-                      family = "Kiwi Maru",
+                      family = court_themes('font'),
                       size = 12,
                       alpha = .75,
                       color = "grey10") +
@@ -365,13 +365,15 @@ plot_teams_efficiency_interactive <- function(season = "2020-21") {
                    axis.text = ggplot2::element_blank(),
                    axis.title = ggplot2::element_blank(),
                    axis.ticks = ggplot2::element_blank())
-
-  ggiraph::girafe(ggobj = plot,
-                  width_svg = 12,
-                  height_svg = 12,
-                  options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
-                                 ggiraph::opts_hover(css = "fill:red;"),
-                                 ggiraph::opts_toolbar(saveaspng = FALSE),
-                                 ggiraph::opts_sizing(rescale = FALSE)))
-
 }
+
+#  ggiraph::girafe(ggobj = plot,
+#                  width_svg = 12,
+#                  height_svg = 12,
+#                  options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
+#                                 ggiraph::opts_hover(css = "fill:red;"),
+#                                 ggiraph::opts_toolbar(saveaspng = FALSE),
+#                                 ggiraph::opts_sizing(rescale = FALSE)))
+#
+#}
+

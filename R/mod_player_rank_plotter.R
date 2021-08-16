@@ -24,8 +24,29 @@ mod_player_rank_plotter_server <- function(id, player_rank){
                                  {plot_player_ranking_interactive(variable = player_rank$variable(),
                                                                   season = player_rank$season())})
 
+
+    output$download <- downloadHandler(
+      filename = function() {
+        glue::glue("top_players_{player_rank$variable()}_{player_rank$season() %>% stringr::str_sub(end = 4) %>% as.integer() +1}.png")
+      },
+      content = function(file) {
+        ggplot2::ggsave(file,
+                        plot = print(change_plot()),
+                        height = 12,
+                        width = 16,
+                        units = "in"
+        )
+
+      }
+    )
     output$plot <- ggiraph::renderGirafe({
-      change_plot()
+      ggiraph::girafe(ggobj = change_plot(),
+                      width_svg = 16,
+                      height_svg = 12,
+                      options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
+                                     ggiraph::opts_hover(css = "fill:red;"),
+                                     ggiraph::opts_toolbar(saveaspng = FALSE),
+                                     ggiraph::opts_sizing(rescale = FALSE)))
     })
 
   })

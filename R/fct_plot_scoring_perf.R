@@ -88,7 +88,7 @@ get_scoring_rate <- function(season = "2020-21", team = 'global') {
       dplyr::left_join(get_team_traditional(season) %>% dplyr::select(team_id,team_name), by = c("team_id")) %>%
       dplyr::mutate(selected_team = dplyr::if_else(team_name == team, 'yes','no')) %>%
       dplyr::mutate(image = glue::glue("https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/{player_id}.png"),
-                    player_label = glue::glue("<div style = 'box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);max-width: 150px;margin: auto;padding-bottom:5px;text-align: center;font-family: Kiwi Maru;background-color:#1A1A1A'><img src= {image} style = 'width : 100%'><span style = 'display: block; margin-top: 0.67em; margin-bottom: 0.67em; margin-left: 0; margin-right: 0; font-weight: bold;color:#BFBFBF;font-size:14px'>{player_name}</span><span style = 'color:grey;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'>{team_name}</span><span style = 'color:#BFBFBF;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'><span style = 'font-weight :bold'>{round(pts_75,digits =1)} pts</span> per 75 poss.<br><span style = 'font-weight :bold'>{scales::percent(ts_pct,accuracy = .1)}</span> TS perc.</span></div>"))
+                    player_label = glue::glue("<div style = 'box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);max-width: 150px;margin: auto;padding-bottom:5px;text-align: center;font-family: {court_themes('font')};background-color:#1A1A1A'><img src= {image} style = 'width : 100%'><span style = 'display: block; margin-top: 0.67em; margin-bottom: 0.67em; margin-left: 0; margin-right: 0; font-weight: bold;color:#BFBFBF;font-size:14px'>{player_name}</span><span style = 'color:grey;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'>{team_name}</span><span style = 'color:#BFBFBF;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'><span style = 'font-weight :bold'>{round(pts_75,digits =1)} pts</span> per 75 poss.<br><span style = 'font-weight :bold'>{scales::percent(ts_pct,accuracy = .1)}</span> TS perc.</span></div>"))
 
   }else {
 
@@ -119,7 +119,7 @@ get_scoring_rate <- function(season = "2020-21", team = 'global') {
                                            dplyr::if_else(player_name %in% no_picture_players_list,
                                                           nba_logo,
                                                           as.character(pre_image))),
-                    player_label = glue::glue("<div style = 'box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);max-width: 150px;margin: auto;padding-bottom:5px;text-align: center;font-family: Kiwi Maru;background-color:#1A1A1A'><img src= {image} style = 'width : 100%'><h1 style = 'color:#BFBFBF;font-size:14px'>{player_name}</h1><p style = 'color:grey;font-size:10px'>{team_name}</p><p style = 'color:#BFBFBF;font-size:10px;'><span style = 'font-weight :bold'>{round(pts_75,digits =1)} pts</span> per 75 poss.<br><span style = 'font-weight :bold'>{scales::percent(ts_pct,accuracy = .1)}</span> TS perc.</p></div>"))
+                    player_label = glue::glue("<div style = 'box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);max-width: 150px;margin: auto;padding-bottom:5px;text-align: center;font-family: {court_themes('font')};background-color:#1A1A1A'><img src= {image} style = 'width : 100%'><h1 style = 'color:#BFBFBF;font-size:14px'>{player_name}</h1><p style = 'color:grey;font-size:10px'>{team_name}</p><p style = 'color:#BFBFBF;font-size:10px;'><span style = 'font-weight :bold'>{round(pts_75,digits =1)} pts</span> per 75 poss.<br><span style = 'font-weight :bold'>{scales::percent(ts_pct,accuracy = .1)}</span> TS perc.</p></div>"))
 
   }
 
@@ -151,7 +151,7 @@ plotless_scoring_rate <- function(season = "2020-21", team = "global") {
                       x = xlim[2],
                       y = (ylim[1]+ylim[2])*.5,
                       label = "Higher Efficiency",
-                      family = "Kiwi Maru",
+                      family = court_themes('font'),
                       size = 12,
                       alpha = .75,
                       angle = 90,
@@ -160,7 +160,7 @@ plotless_scoring_rate <- function(season = "2020-21", team = "global") {
                       x = xlim[1],
                       y = (ylim[1]+ylim[2])*.5,
                       label = "Lower Efficiency",
-                      family = "Kiwi Maru",
+                      family = court_themes('font'),
                       size = 12,
                       alpha = .75,
                       angle = 90,
@@ -169,7 +169,7 @@ plotless_scoring_rate <- function(season = "2020-21", team = "global") {
                       x = (xlim[1]+xlim[2])*.5,
                       y = ylim[1],
                       label = "Lower Volume",
-                      family = "Kiwi Maru",
+                      family = court_themes('font'),
                       size = 12,
                       alpha = .75,
                       color = "grey10") +
@@ -177,7 +177,7 @@ plotless_scoring_rate <- function(season = "2020-21", team = "global") {
                       x = (xlim[1]+xlim[2])*.5,
                       y = ylim[2],
                       label = "Higher Volume",
-                      family = "Kiwi Maru",
+                      family = court_themes('font'),
                       size = 12,
                       alpha = .75,
                       color = "grey10") +
@@ -253,13 +253,14 @@ plot_scoring_rate <- function(season = "2020-21",team = "global") {
 
   plot_with_logo <- (a[[1]] + patchwork::inset_element(a[[2]], left = 0, top = 1.195, right = 0.09  , bottom = 1.1)) & ggplot2::theme(plot.background = ggplot2::element_rect(fill = court_themes('court'), color = court_themes('court')))
 
-
-  ggiraph::girafe(ggobj = plot_with_logo,
-                  width_svg = 12,
-                  height_svg = 12,
-                  options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
-                                 ggiraph::opts_hover(css = "fill:red;"),
-                                 ggiraph::opts_toolbar(saveaspng = FALSE),
-                                 ggiraph::opts_sizing(rescale = FALSE)))
-
 }
+#  ggiraph::girafe(ggobj = plot_with_logo,
+#                  width_svg = 12,
+#                  height_svg = 12,
+#                  options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
+#                                 ggiraph::opts_hover(css = "fill:red;"),
+#                                 ggiraph::opts_toolbar(saveaspng = FALSE),
+#                                 ggiraph::opts_sizing(rescale = FALSE)))
+#
+#}
+

@@ -1,6 +1,15 @@
-# Theming function
+# Theming functions
 
-theme_dark_cap <- function(font_family = "Kiwi Maru", text_color = court_themes('lines'), plot_background = court_themes('court')) {
+court_themes <- function(var) {
+
+  df <- tibble::tibble(court = 'grey20',
+                       lines = '#999999',
+                       font = 'Kiwi Maru',
+                       bg_table_markdown = "#E8E8E8")
+  df %>% dplyr::pull(var)
+}
+
+theme_dark_cap <- function(font_family = court_themes('font'), text_color = court_themes('lines'), plot_background = court_themes('court')) {
   ggplot2::theme(text = ggplot2::element_text(family = font_family,
                                               color = text_color),
                  plot.background = ggplot2::element_rect(fill = plot_background, color = plot_background),
@@ -31,20 +40,13 @@ get_color_tibble <- function(var) {
 
 ## Not Run (downloading Kiwi Maru and Manrope fonts and CSS within project,
 ## slower than having both fonts installed anyway)
+
 #if(!dir.exists("fonts")) dir.create("fonts")
-#setup_font(id = "kiwi-maru", output_dir = "fonts",
+#gfonts::setup_font(id = "kiwi-maru", output_dir = "fonts",
 #           variants = "regular", prefer_local_source = FALSE)
 #setup_font(id = "manrope", output_dir = "fonts",
 #           variants = "regular", prefer_local_source = FALSE)
 
-court_themes <- function(var) {
-
-  df <- tibble::tibble(court = 'grey20',
-                       lines = '#999999',
-                       font = 'Kiwi Maru',
-                       bg_table_markdown = "#E8E8E8")
-  df %>% dplyr::pull(var)
-}
 
 rcolor_to_hex <- function(color) {
   rgb <- col2rgb(color)

@@ -28,8 +28,29 @@ mod_shot_chart_plotter_server <- function(id, shot_chart){
                                              summary = TRUE)}
                             )
 
+
+
+    output$download <- downloadHandler(
+      filename = function() {
+        glue::glue("shot_chart_{shot_chart$player() %>% get_last_name() %>% stringr::str_to_lower()}_{shot_chart$season() %>% stringr::str_sub(end = 4) %>% as.integer() +1}.png")
+      },
+      content = function(file) {
+        ggplot2::ggsave(file,
+                        plot = print(change_plot()),
+                        height = 12,
+                        width = 12,
+                        units = "in"
+        )
+
+      }
+    )
+
     output$plot <- ggiraph::renderGirafe(
-      change_plot()
+        ggiraph::girafe(ggobj = change_plot(),
+                        width_svg = 12,
+                        height_svg = 12,
+                        options = list(ggiraph::opts_toolbar(saveaspng = FALSE),
+                                       ggiraph::opts_sizing(rescale = FALSE)))
     )
   })
 }

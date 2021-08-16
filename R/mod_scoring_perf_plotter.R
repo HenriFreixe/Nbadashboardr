@@ -21,11 +21,34 @@ mod_scoring_perf_plotter_server <- function(id, scoring_perf){
   moduleServer( id, function(input, output, session){
 
     change_plot <- eventReactive(scoring_perf$change(),
-                                 {print(plot_scoring_rate(team = scoring_perf$team(),
-                                                          season = scoring_perf$season()))})
+                                 {plot_scoring_rate(team = scoring_perf$team(),
+                                                          season = scoring_perf$season())})
+
+
+    output$download <- downloadHandler(
+      filename = function() {
+        glue::glue("scoring_perf_{scoring_perf$season() %>% stringr::str_sub(end = 4) %>% as.integer() +1}_{scoring_perf$team() %>% get_last_name() %>% stringr::str_to_lower()}.png")
+      },
+      content = function(file) {
+        ggplot2::ggsave(file,
+                        plot = print(change_plot()),
+                        height = 12,
+                        width = 12,
+                        units = "in"
+        )
+
+      }
+    )
 
     output$plot <- ggiraph::renderGirafe({
-      change_plot()
+
+        ggiraph::girafe(ggobj = change_plot(),
+                        width_svg = 12,
+                        height_svg = 12,
+                        options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
+                                       ggiraph::opts_hover(css = "fill:red;"),
+                                       ggiraph::opts_toolbar(saveaspng = FALSE),
+                                       ggiraph::opts_sizing(rescale = FALSE)))
     })
 
   })

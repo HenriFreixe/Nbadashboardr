@@ -5,6 +5,11 @@
 #' @import shiny
 #' @noRd
 app_server <- function( input, output, session ) {
+  ## Font management
+  sysfonts::font_add("Kiwi Maru",regular = "fonts/fonts/kiwi-maru-v6-latin-regular.ttf")
+  showtext::showtext_auto()
+
+
   # List the first level callModules here
 shot_chart <- mod_shot_chart_selector_server("shot_chart")
 mod_shot_chart_plotter_server("shot_chart", shot_chart)

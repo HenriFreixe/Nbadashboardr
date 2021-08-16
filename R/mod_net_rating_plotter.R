@@ -25,8 +25,30 @@ mod_net_rating_plotter_server <- function(id, net_rating){
     )
 
 
+    output$download <- downloadHandler(
+      filename = function() {
+        glue::glue("net_rating_{net_rating$season() %>% stringr::str_sub(end = 4) %>% as.integer() +1}.png")
+      },
+      content = function(file) {
+        ggplot2::ggsave(file,
+                        plot = print(change_plot()),
+                        height = 12,
+                        width = 12,
+                        units = "in"
+        )
+
+      }
+    )
+
       output$plot <- ggiraph::renderGirafe(
-        expr = change_plot())
+        expr = ggiraph::girafe(ggobj = change_plot(),
+                          width_svg = 12,
+                          height_svg = 12,
+                          options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
+                                         ggiraph::opts_hover(css = "fill:red;"),
+                                         ggiraph::opts_toolbar(saveaspng = FALSE),
+                                         ggiraph::opts_sizing(rescale = FALSE))))
+
   })
 }
 

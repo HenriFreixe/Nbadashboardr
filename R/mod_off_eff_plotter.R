@@ -24,8 +24,29 @@ mod_off_eff_plotter_server <- function(id, off_eff){
                                  {plot_off_evo_interactive(team = off_eff$team())}
     )
 
+    output$download <- downloadHandler(
+      filename = function() {
+        glue::glue("offensive_eff_{off_eff$team() %>% get_last_name() %>% stringr::str_to_lower()}.png")
+      },
+      content = function(file) {
+        ggplot2::ggsave(file,
+                        plot = print(change_plot()),
+                        height = 12,
+                        width = 12,
+                        units = "in"
+                        )
+
+      }
+    )
+
     output$plot <- ggiraph::renderGirafe({
-      change_plot()
+      ggiraph::girafe(ggobj = change_plot(),
+                      width_svg = 12,
+                      height_svg = 12,
+                      options = list(ggiraph::opts_tooltip(use_fill = TRUE),
+                                     ggiraph::opts_hover(css = "fill:red;"),
+                                     ggiraph::opts_toolbar(saveaspng = FALSE),
+                                     ggiraph::opts_sizing(rescale = FALSE)))
     })
 
   })

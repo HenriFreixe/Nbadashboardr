@@ -21,10 +21,31 @@ mod_season_recap_plotter_server <- function(id, season_recap){
   moduleServer( id, function(input, output, session){
 
     change_plot <- eventReactive(season_recap$change(),
-                                 {plot_season_recap( season = season_recap$season())})
+                                 {plot_season_recap(season = season_recap$season())})
+
+    output$download <- downloadHandler(
+      filename = function() {
+        glue::glue("season_recap_{season_recap$season() %>% stringr::str_sub(end = 4) %>% as.integer() +1}.png")
+      },
+      content = function(file) {
+        ggplot2::ggsave(file,
+                        plot = print(change_plot()),
+                        height = 34,
+                        width = 10,
+                        units = "in"
+        )
+
+      }
+    )
 
     output$plot <- ggiraph::renderGirafe({
-      change_plot()
+        ggiraph::girafe(ggobj = change_plot(),
+                        width_svg = 10,
+                        height_svg = 34,
+                        options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
+                                       ggiraph::opts_toolbar(saveaspng = FALSE),
+                                       ggiraph::opts_hover(css = "fill:red;"),
+                                       ggiraph::opts_sizing(rescale = FALSE)))
     })
 
   })

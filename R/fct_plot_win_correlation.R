@@ -204,7 +204,7 @@ plot_bump_chart <- function(season = '2020-21',team = 'global', variable = 'sala
     ggtext::geom_richtext(ggplot2::aes(x = -.55,
                                        y = -1,
                                        label = "Teams ranked by Win%"),
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           color = court_themes('lines'),
                           hjust = 1,
                           fill = NA,
@@ -213,7 +213,7 @@ plot_bump_chart <- function(season = '2020-21',team = 'global', variable = 'sala
     ggtext::geom_richtext(ggplot2::aes(x = .55,
                                        y = -1,
                                        label = glue::glue("Teams ranked by {column_label}")),
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           color = court_themes('lines'),
                           hjust = 0,
                           size = 6,
@@ -236,7 +236,7 @@ plot_bump_chart <- function(season = '2020-21',team = 'global', variable = 'sala
                                        color = color,
                                        size = color,
                                        label = scales::percent(win_pct,accuracy = .1)),
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           hjust = 0.5,
                           fill = NA,
                           label.color = NA) +
@@ -245,7 +245,7 @@ plot_bump_chart <- function(season = '2020-21',team = 'global', variable = 'sala
                                        color = color,
                                        size = color,
                                        label = scales::percent(.data[[variable]], prefix = prefix_label,suffix = suffix_label, scale = scale_label, accuracy = .1)),
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           hjust = .5,
                           fill = NA,
                           label.color = NA) +
@@ -254,7 +254,7 @@ plot_bump_chart <- function(season = '2020-21',team = 'global', variable = 'sala
                                        color = color,
                                        size = color,
                                        label = team_name),
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           hjust = 1,
                           fill = NA,
                           label.color = NA) +
@@ -263,7 +263,7 @@ plot_bump_chart <- function(season = '2020-21',team = 'global', variable = 'sala
                                        color = color,
                                        label = team_name,
                                        size = color),
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           hjust = 0,
                           fill = NA,
                           label.color = NA) +
@@ -274,7 +274,7 @@ plot_bump_chart <- function(season = '2020-21',team = 'global', variable = 'sala
     theme_dark_cap() +
     ggplot2::theme(plot.title = ggtext::element_markdown(hjust = .5,
                                                          margin = ggplot2::margin(t = 20)),
-                   plot.subtitle = ggtext::element_markdown(family = "Kiwi Maru",
+                   plot.subtitle = ggtext::element_markdown(family = court_themes('font'),
                                                             hjust = .5,
                                                             margin = ggplot2::margin(t = 20,
                                                                                      b=5),
@@ -291,11 +291,11 @@ plot_bump_chart <- function(season = '2020-21',team = 'global', variable = 'sala
                    legend.background = ggplot2::element_blank())
 
   plot_with_logo <- plot + patchwork::inset_element(team_logo(team, width = 70), left = 0.025, top = 1.175, right = 0.150, bottom = 1.060)
-
-  ggiraph::girafe(ggobj = plot_with_logo,
-                  width_svg = 16,
-                  height_svg = 12,
-                  options = list(ggiraph::opts_toolbar(saveaspng = FALSE),
-                                 ggiraph::opts_sizing(rescale = FALSE)))
-
 }
+#  ggiraph::girafe(ggobj = plot_with_logo,
+#                  width_svg = 16,
+#                  height_svg = 12,
+#                  options = list(ggiraph::opts_toolbar(saveaspng = FALSE),
+#                                 ggiraph::opts_sizing(rescale = FALSE)))
+#
+#}

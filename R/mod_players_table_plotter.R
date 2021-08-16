@@ -24,7 +24,19 @@ change_plot <- eventReactive(players_table$change(),
                              {plot_players_table(season = players_table$season(),
                                                  variable = players_table$variable())})
 
-    output$table <- gt::render_gt({
+
+output$download <- downloadHandler(
+  filename = function() {
+    glue::glue("players_table_{players_table$variable()}_{players_table$season() %>% stringr::str_sub(end = 4) %>% as.integer() +1}.html")
+  },
+  content = function(file) {
+    gt::gtsave(data = change_plot(),
+               filename = file)
+
+  }
+)
+
+output$table <- gt::render_gt({
       change_plot()}
     )
 

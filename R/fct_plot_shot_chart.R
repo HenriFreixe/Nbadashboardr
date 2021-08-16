@@ -535,7 +535,7 @@ plot_court <- function(player,
                                        label = label,
                                        color = color),
                           fill = NA,
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           label.color = NA,
                           nudge_x = -0.25) +
     ggtext::geom_richtext(data = tibble::rownames_to_column(data.frame(color_palette)) %>%
@@ -547,7 +547,7 @@ plot_court <- function(player,
                                        label = label,
                                        color = color),
                           fill = NA,
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           label.color = NA,
                           nudge_x = 0.25) +
     ggplot2::scale_fill_identity() +
@@ -585,7 +585,7 @@ plot_court <- function(player,
                                                  label = label),
                           fill = NA,
                           color = court_themes('lines'),
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           label.color = NA,
                           nudge_x = -0.25) +
     ggtext::geom_richtext(data = tibble::tibble(label = c("High","Medium","Low"), size = c(15,9,3)) %>%
@@ -595,7 +595,7 @@ plot_court <- function(player,
                                                  label = label),
                           fill = NA,
                           color = court_themes('lines'),
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           label.color = NA,
                           nudge_x = 0.25) +
     ggplot2::scale_size_identity() +
@@ -623,168 +623,15 @@ plot_court <- function(player,
                                                                                                                                                                                                                                margin = ggplot2::margin(t = 5,
                                                                                                                                                                                                                                                         b = 20,
                                                                                                                                                                                                                                                         r = 30)))
-  ggiraph::girafe(ggobj = plot,
-                  width_svg = 12,
-                  height_svg = 12,
-                  options = list(ggiraph::opts_toolbar(saveaspng = FALSE),
-                                 ggiraph::opts_sizing(rescale = FALSE)))
 }
+#  ggiraph::girafe(ggobj = plot,
+#                  width_svg = 12,
+#                  height_svg = 12,
+#                  options = list(ggiraph::opts_toolbar(saveaspng = FALSE),
+#                                 ggiraph::opts_sizing(rescale = FALSE)))
+#}
 
 
-plot_court_alternative <- function(player,
-                                   season = "2020-21",
-                                   summary = TRUE) {
-
-  height <-  94 / 2
-
-  # Shooting efficiency Color palette
-
-  color_palette <- get_color_tibble('palette')
-
-  color_palette_tbl <- get_color_tibble('tibble')
-
-  .court_layout <- court_layout()
-
-  shot_chart <-  .court_layout +
-    ggplot2::geom_point(data = get_shot_data_player(player,season,summary),
-                        mapping = ggplot2::aes(x = -av_loc_x,
-                                               y = av_loc_y,
-                                               fill = zone_efficiency,
-                                               size = fga),
-                        shape = 21,
-                        stroke = 1,
-                        color = "grey5") +
-    ggtext::geom_richtext(mapping = ggplot2::aes(x = -20,
-                                                 y = height*0.9,
-                                                 label = get_team_logo_from_player(player,season) %>% link_to_img(width = 80)),
-                          fill = NA,
-                          label.color = NA,
-                          label.padding = grid::unit(rep(0,4),"pt")) +
-    ggtext::geom_richtext(mapping = ggplot2::aes(x = 0,
-                                                 y = height*0.85,
-                                                 label = get_player_picture(player,season) %>% link_to_img(width = 150)),
-                          fill = NA,
-                          label.color = NA,
-                          label.padding = grid::unit(rep(0,4),"pt")) +
-    ggplot2::labs(title = glue::glue("{player} Shooting Profile <span style='color:#CBA049;'>| {season}</span>" ),
-                  subtitle = glue::glue("{get_last_name(player)} scored <span style='color:#CBA049;font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(pts)}</span> points per game,<br> on <span style='color:{get_subtitles_tbl(player,season) %>% dplyr::pull(color_fg2)};font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(fg2_pct) %>% round(digits = 3)*100}%</span> from 2 point shots and <span style='color:{get_subtitles_tbl(player,season) %>% dplyr::pull(color_fg3)};font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(fg3_pct)%>% round(digits = 3)*100}%</span> from threes")) +
-    ggplot2::guides(fill = FALSE,
-                    size = FALSE) +
-    ggplot2::scale_size_continuous(range = c(0.001,25)) +
-    ggplot2::scale_fill_manual(values = color_palette) # %globals% structure(TRUE, add = c("get_last_name","get_subtitles_tbl","average_2pct3pct","color_palette_tbl"))
-
-
-  # Accuracy Legend
-  accuracy_legend <-  tibble::rownames_to_column(data.frame(color_palette)) %>%
-    dplyr::select("attribute" = "rowname","color" = "color_palette") %>%
-    dplyr::mutate(x = dplyr::row_number()*0.25) %>%
-    ggplot2::ggplot() +
-    ggplot2::geom_point(ggplot2::aes(x = x,
-                                     y = 1,
-                                     fill = color),
-                        shape = 21,
-                        color = "grey5",
-                        stroke = 1,
-                        size = 10) +
-    ggtext::geom_richtext(data = tibble::rownames_to_column(data.frame(color_palette)) %>%
-                            dplyr::select("attribute" = "rowname","color" = "color_palette") %>%
-                            dplyr::mutate(x = dplyr::row_number()*0.25) %>% dplyr::slice(1) %>%
-                            dplyr::mutate(label = "Above<br>Avg."),
-                          ggplot2::aes(x = x,
-                                       y = 1,
-                                       label = label,
-                                       color = color),
-                          fill = NA,
-                          family = "Kiwi Maru",
-                          label.color = NA,
-                          nudge_x = -0.25) +
-    ggtext::geom_richtext(data = tibble::rownames_to_column(data.frame(color_palette)) %>%
-                            dplyr::select("attribute" = "rowname","color" = "color_palette") %>%
-                            dplyr::mutate(x = dplyr::row_number()*0.25) %>% dplyr::slice(dplyr::n()) %>%
-                            dplyr::mutate(label = "Below<br>Avg."),
-                          ggplot2::aes(x = x,
-                                       y = 1,
-                                       label = label,
-                                       color = color),
-                          fill = NA,
-                          family = "Kiwi Maru",
-                          label.color = NA,
-                          nudge_x = 0.25) +
-    ggplot2::scale_fill_identity() +
-    ggplot2::scale_color_identity() +
-    ggplot2::coord_cartesian(xlim = c(-0.125,2.125)) +
-    ggplot2::labs(title = "Shooting Accuracy by location") +
-    theme_dark_cap() +
-    ggplot2::theme(plot.margin = ggplot2::margin(t = -10, r = 5.5, l = 5.5, b = 5.5, unit = "pt"),
-                   plot.title = ggplot2::element_text(hjust = .5,
-                                                      margin = ggplot2::margin(t=0,b = 0)),
-                   panel.grid = ggplot2::element_blank(),
-                   panel.border = ggplot2::element_blank(),
-                   axis.text = ggplot2::element_blank(),
-                   axis.title = ggplot2::element_blank(),
-                   axis.ticks = ggplot2::element_blank(),
-                   legend.background = ggplot2::element_blank())
-
-  # Shooting Volume Legend
-
-
-  volume_legend <-  tibble::tibble(label = c("High","Medium","Low"), size = c(15,9,3)) %>%
-    dplyr::mutate(x = dplyr::row_number()*0.25) %>%
-    ggplot2::ggplot() +
-    ggplot2::geom_point(ggplot2::aes(x = x,
-                                     y = 1,
-                                     size = size),
-                        fill = NA,
-                        color = "grey5",
-                        shape = 21,
-                        stroke = 1) +
-    ggtext::geom_richtext(data = tibble::tibble(label = c("High","Medium","Low"), size = c(15,9,3)) %>%
-                            dplyr::mutate(x = dplyr::row_number()*0.25) %>% dplyr::slice(1),
-                          mapping = ggplot2::aes(x = x,
-                                                 y = 1,
-                                                 label = label),
-                          fill = NA,
-                          color = court_themes('lines'),
-                          family = "Kiwi Maru",
-                          label.color = NA,
-                          nudge_x = -0.25) +
-    ggtext::geom_richtext(data = tibble::tibble(label = c("High","Medium","Low"), size = c(15,9,3)) %>%
-                            dplyr::mutate(x = dplyr::row_number()*0.25) %>% dplyr::slice(dplyr::n()),
-                          mapping = ggplot2::aes(x = x,
-                                                 y = 1,
-                                                 label = label),
-                          fill = NA,
-                          color = court_themes('lines'),
-                          family = "Kiwi Maru",
-                          label.color = NA,
-                          nudge_x = 0.25) +
-    ggplot2::scale_size_identity() +
-    ggplot2::coord_cartesian(xlim = c(-.125,1.125)) +
-    ggplot2::labs(title = "Shooting frequency by location") +
-    theme_dark_cap() +
-    ggplot2::theme(plot.margin = ggplot2::margin(t = -10, r = 5.5, l = 5.5, b = 5.5, unit = "pt"),
-                   plot.title = ggplot2::element_text(hjust = .5,
-                                             margin = ggplot2::margin(t=0,b = 0)),
-                   panel.grid = ggplot2::element_blank(),
-                   panel.border = ggplot2::element_blank(),
-                   axis.text = ggplot2::element_blank(),
-                   axis.title = ggplot2::element_blank(),
-                   axis.ticks = ggplot2::element_blank(),
-                   legend.background = ggplot2::element_blank())
-
-  legend <- accuracy_legend + volume_legend + patchwork::plot_layout(widths = c(1.2,0.8))
-
-  (shot_chart / legend + patchwork::plot_layout(heights = c(1,.075))) +
-    patchwork::plot_annotation(caption = glue::glue("Inspiration from Kirk Goldsberry's and Owen Philipp's shot charts<br>Visualisation by Henri Freixe • Sources : Nba.com")) & theme(plot.background = ggplot2::element_rect(fill = court_themes('court'),color = court_themes('court')),
-                                                                                                                                                                                       plot.margin = ggplot2::margin(t=0,r=0,b=5.5,l=0,unit = "pt"),
-                                                                                                                                                                                       plot.caption = ggtext::element_markdown(size = 9,
-                                                                                                                                                                                                                               family = court_themes("font"),
-                                                                                                                                                                                                                               color = court_themes("lines"),
-                                                                                                                                                                                                                               margin = ggplot2::margin(t = 5,
-                                                                                                                                                                                                                                                        b = 20,
-                                                                                                                                                                                                                                                        r = 30)))
-
-}
 
 # Awards function
 

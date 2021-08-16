@@ -26,9 +26,30 @@ mod_win_correlation_plotter_server <- function(id, win_correlation){
                                                   team = win_correlation$team())}
     )
 
-    output$plot <- ggiraph::renderGirafe(
-      expr = change_plot())
 
+    output$download <- downloadHandler(
+      filename = function() {
+        glue::glue("win_correlation_{win_correlation$variable()}_{win_correlation$season() %>% stringr::str_sub(end = 4) %>% as.integer() +1}_{win_correlation$team() %>% get_last_name() %>% stringr::str_to_lower()}.png")
+      },
+      content = function(file) {
+        ggplot2::ggsave(file,
+                        plot = print(change_plot()),
+                        height = 12,
+                        width = 16,
+                        units = "in"
+        )
+
+      }
+    )
+
+
+    output$plot <- ggiraph::renderGirafe(
+      expr =
+    ggiraph::girafe(ggobj = change_plot(),
+                    width_svg = 16,
+                    height_svg = 12,
+                    options = list(ggiraph::opts_toolbar(saveaspng = FALSE),
+                                   ggiraph::opts_sizing(rescale = FALSE))))
   })
 }
 

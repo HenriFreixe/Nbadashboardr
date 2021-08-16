@@ -175,7 +175,7 @@ plot_player_ranking_interactive <- function(season = "2020-21", variable = "bpm"
     head(10) %>%
     dplyr::left_join(get_team_traditional(season) %>% dplyr::select(team_id,team_name), by = c("team_id")) %>%
     dplyr::mutate(label = link_to_img(image, width = 95, alt = player_name),
-           tooltip_label = glue::glue("<div style = 'box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);max-width: 150px;margin: auto;padding-bottom:5px;text-align: center;font-family: Kiwi Maru;background-color:#1A1A1A'><img src= {image} style = 'width : 100%'><span style = 'display: block; margin-top: 0.67em; margin-bottom: 0.67em; margin-left: 0; margin-right: 0; font-weight: bold;color:#BFBFBF;font-size:14px'>{player_name}</span><span style = 'color:grey;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'>{team_name}</span><span style = 'color:#BFBFBF;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'><span style = 'font-weight :bold'>{round(pts,digits =1)}</span> pts per game<br><span style = 'font-weight :bold'>{round(ast,digits =1)}</span> assists per game<br><span style = 'font-weight :bold'>{round(reb,digits =1)}</span> rebounds per game<br><span style = 'font-weight :bold'>{round(stl,digits =1)}</span> steals per game<br><span style = 'font-weight :bold'>{round(blk,digits =1)}</span> blocks per game</span></div>")) %>%
+           tooltip_label = glue::glue("<div style = 'box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);max-width: 150px;margin: auto;padding-bottom:5px;text-align: center;font-family: {court_themes('court')};background-color:#1A1A1A'><img src= {image} style = 'width : 100%'><span style = 'display: block; margin-top: 0.67em; margin-bottom: 0.67em; margin-left: 0; margin-right: 0; font-weight: bold;color:#BFBFBF;font-size:14px'>{player_name}</span><span style = 'color:grey;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'>{team_name}</span><span style = 'color:#BFBFBF;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'><span style = 'font-weight :bold'>{round(pts,digits =1)}</span> pts per game<br><span style = 'font-weight :bold'>{round(ast,digits =1)}</span> assists per game<br><span style = 'font-weight :bold'>{round(reb,digits =1)}</span> rebounds per game<br><span style = 'font-weight :bold'>{round(stl,digits =1)}</span> steals per game<br><span style = 'font-weight :bold'>{round(blk,digits =1)}</span> blocks per game</span></div>")) %>%
     dplyr::mutate(label = forcats::fct_inorder(label),
                   color = dplyr::if_else(dplyr::row_number() == 1,"#CBA049","grey10"),
                   color2 = dplyr::if_else(dplyr::row_number() == 1,"#CBA049",court_themes('lines'))) #%>%
@@ -388,7 +388,7 @@ plot_player_ranking_interactive <- function(season = "2020-21", variable = "bpm"
     ggplot2::geom_hline(yintercept = label_all_time_pos, color = line_color, linetype = 3) +
     ggtext::geom_richtext(x = 5.5,
                           y = label_all_time_pos,
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           label = glue::glue("All-Time Level Season<sup style = font-size:{font_size_superscript}>(1)</sup>"),
                           size = label_size,
                           alpha = .75,
@@ -400,7 +400,7 @@ plot_player_ranking_interactive <- function(season = "2020-21", variable = "bpm"
     ggplot2::geom_hline(yintercept = label_mvp_pos , color = line_color, linetype = 3) +
     ggtext::geom_richtext(x = 5.5,
                           y = label_mvp_pos,
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           label = glue::glue("MVP Level Season<sup style = font-size:{font_size_superscript}>(1)</sup>"),
                           size = label_size,
                           alpha = .75,
@@ -439,7 +439,7 @@ plot_player_ranking_interactive <- function(season = "2020-21", variable = "bpm"
                                        label = .data[[variable]]),
                           nudge_y = nudge_label,
                           size = label_size2,
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           vjust = 0,
                           fill = NA,
                           label.color = NA,
@@ -473,12 +473,15 @@ plot_player_ranking_interactive <- function(season = "2020-21", variable = "bpm"
                    panel.border = ggplot2::element_blank(),
                    legend.background = ggplot2::element_blank())
 
-  ggiraph::girafe(ggobj = plot,
-                  width_svg = 16,
-                  height_svg = 12,
-                  options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
-                                 ggiraph::opts_hover(css = "fill:red;"),
-                                 ggiraph::opts_toolbar(saveaspng = FALSE),
-                                 ggiraph::opts_sizing(rescale = FALSE)))
-
 }
+#  ggiraph::girafe(ggobj = plot,
+#                  width_svg = 16,
+#                  height_svg = 12,
+#                  options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
+#                                 ggiraph::opts_hover(css = "fill:red;"),
+#                                 ggiraph::opts_toolbar(saveaspng = FALSE),
+#                                 ggiraph::opts_sizing(rescale = FALSE)))
+#
+#}
+
+

@@ -114,28 +114,28 @@ plot_finals <- function(season = "2019-20") {
                        ggplot2::aes(x = -.22,
                                     y = game,
                                     label = pts),
-                       family = "Kiwi Maru",
+                       family = court_themes('font'),
                        size = 4,
                        color = "#999999") +
     ggplot2::geom_text(data = df %>% dplyr::filter(conference == "East"),
                        ggplot2::aes(x = .22,
                                     y = game,
                                     label = pts),
-                       family = "Kiwi Maru",
+                       family = court_themes('font'),
                        size = 4,
                        color = "#999999") +
     ggplot2::geom_text(data = df,
                        ggplot2::aes(x = 0,
                                     y = game,
                                     label = glue::glue("Game {game}")),
-                       family = "Kiwi Maru",
+                       family = court_themes('font'),
                        colour = "#1A1A1A",
                        size = 7) +
     #Finals MVP Label----------
   ggtext::geom_richtext(mapping = ggplot2::aes(x = 0,
                                                y = df %>% dplyr::arrange(dplyr::desc(game)) %>% head(1) %>% dplyr::pull(game) + 1.75),
                         label = glue::glue("<span style = 'color:#ccb076;font-weight:bold;font-size:22px'>Finals Most Valuable Player</span><br><span style = 'color:#999999'>{stats$team_name}</span>"),
-                        family = "Kiwi Maru",
+                        family = court_themes('font'),
                         fill = NA,
                         label.color = NA,
                         lineheight = 1.75,
@@ -144,7 +144,7 @@ plot_finals <- function(season = "2019-20") {
     ggtext::geom_richtext(mapping = ggplot2::aes(x = 0,
                                                  y = df %>% dplyr::arrange(dplyr::desc(game)) %>% head(1) %>% dplyr::pull(game) + 1.75),
                           label = glue::glue("<img src= {get_player_picture(stats %>% dplyr::pull(player_name), season = season)} width = '145'><br><br><span style = 'display: block; font-weight: bold;color:#999999;font-size:22px;text-align:center;'>{stats %>% dplyr::pull(player_name) %>% remove_last_name() }<br>{stats %>% dplyr::pull(player_name) %>% get_last_name() }</span><br><br><span style = 'color:#777777;font-size:14px;display: block;text-align:center;line-height:18px;'><span style = 'font-size :18px'>{stats %>% dplyr::pull(pts)}</span> pts<br style = 'line-height:150%'><span style = 'font-size :18px;line-height:18px;'>{stats %>% dplyr::pull(ast)}</span> assists<br><span style = 'font-size :18px;line-height:18px;'>{stats %>% dplyr::pull(reb)}</span> rebounds</span><br>"),
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           fill = "#1F1F1F",
                           label.color = NA,
                           lineheight = 0.5,
@@ -156,7 +156,7 @@ plot_finals <- function(season = "2019-20") {
                         mapping = ggplot2::aes(x = x,
                                                y = y,
                                                label = label),
-                        family = "Kiwi Maru",
+                        family = court_themes('font'),
                         fill = NA,
                         label.color = NA,
                         label.padding = grid::unit(rep(4,4),"pt"),
@@ -229,7 +229,7 @@ plot_season_awards <- function(season = "2018-19") {
     ggtext::geom_richtext(mapping = ggplot2::aes(x = x,
                                                  y = y,
                                                  label = label_award),
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           fill = NA,
                           label.color = NA,
                           label.padding = grid::unit(rep(4,4),"pt"),
@@ -238,7 +238,7 @@ plot_season_awards <- function(season = "2018-19") {
     ggtext::geom_richtext(mapping = ggplot2::aes(x = x,
                                                  y = y,
                                                  label = label_player),
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           fill = "#1F1F1F",
                           label.color = NA,
                           lineheight = 0.5,
@@ -344,7 +344,7 @@ plot_all_stars <- function(season = "2018-19") {
 
 
   df <- df %>%
-    dplyr::mutate(tooltip_label = glue::glue("<div style = 'box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);max-width: 150px;margin: auto;padding-bottom:5px;text-align: center;font-family: Kiwi Maru;background-color:#1A1A1A'><img src= {image} style = 'width : 100%'><span style = 'display: block; margin-top: 0.67em; margin-bottom: 0.67em; margin-left: 0; margin-right: 0; font-weight: bold;color:#BFBFBF;font-size:14px'>{player_name}</span><span style = 'color:grey;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'>{team_name}</span><span style = 'color:#BFBFBF;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'><span style = 'font-weight :bold'>{round(pts,digits =1)}</span> pts per game<br><span style = 'font-weight :bold'>{round(ast,digits =1)}</span> assists per game<br><span style = 'font-weight :bold'>{round(reb,digits =1)}</span> rebounds per game</span></div>"))
+    dplyr::mutate(tooltip_label = glue::glue("<div style = 'box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);max-width: 150px;margin: auto;padding-bottom:5px;text-align: center;font-family: {court_themes('font')};background-color:#1A1A1A'><img src= {image} style = 'width : 100%'><span style = 'display: block; margin-top: 0.67em; margin-bottom: 0.67em; margin-left: 0; margin-right: 0; font-weight: bold;color:#BFBFBF;font-size:14px'>{player_name}</span><span style = 'color:grey;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'>{team_name}</span><span style = 'color:#BFBFBF;font-size:10px;display: block; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0;'><span style = 'font-weight :bold'>{round(pts,digits =1)}</span> pts per game<br><span style = 'font-weight :bold'>{round(ast,digits =1)}</span> assists per game<br><span style = 'font-weight :bold'>{round(reb,digits =1)}</span> rebounds per game</span></div>"))
 
   plot <- df %>%
     ggplot2::ggplot() +
@@ -361,7 +361,7 @@ plot_all_stars <- function(season = "2018-19") {
     ggtext::geom_richtext(ggplot2::aes(x = x,
                                        y = y,
                                        label = player_label),
-                          family = "Kiwi Maru",
+                          family = court_themes('font'),
                           fill = NA,
                           label.color = NA,
                           label.padding = grid::unit(rep(0,4),"pt"),
@@ -417,14 +417,14 @@ plot_season_recap <- function(season = "2018-19") {
              patchwork::plot_layout(heights = c(6,5,6))) &
     ggplot2::theme(plot.background = ggplot2::element_rect(fill = court_themes('court'),color = court_themes('court')))
 
-
-  ggiraph::girafe(ggobj = plot,
-                  width_svg = 10,
-                  height_svg = 34,
-                  options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
-                                 ggiraph::opts_toolbar(saveaspng = FALSE),
-                                 ggiraph::opts_hover(css = "fill:red;"),
-                                 ggiraph::opts_sizing(rescale = FALSE)))
-
-
 }
+#  ggiraph::girafe(ggobj = plot,
+#                  width_svg = 10,
+#                  height_svg = 34,
+#                  options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
+#                                 ggiraph::opts_toolbar(saveaspng = FALSE),
+#                                 ggiraph::opts_hover(css = "fill:red;"),
+#                                 ggiraph::opts_sizing(rescale = FALSE)))
+#
+#
+#

@@ -6,13 +6,11 @@
 #' @noRd
 app_ui <- function(request) {
 
-  ## On va essayer de transformer ça en Tab fade et tab Pills plus tard !
 
   tab <- function(...) {
     shiny::tabPanel(...)#class = "p-3 border border-top-0 rounded-bottom text-secondary")
   }
 
-  #bslib::bs_global_theme(version = "4", bootswatch = "minty")
   #https://github.com/daattali/shinycssloaders
 
   my_theme <- bslib::bs_theme(version = "4",
@@ -22,22 +20,12 @@ app_ui <- function(request) {
                   fg = "#2F2E2E",
                   primary = "#685bb5",
                   secondary = "#E5284C",
-                  base_font = "Manrope",
-                  heading_font = "Kiwi Maru",
-                  code_font = "Manrope"
+                  base_font = bslib::font_google("Lato"),
+                  heading_font = bslib::font_google("Kiwi Maru"),
+                  code_font = bslib::font_google("Lato")
                   )
 
 
-  #bslib::bs_global_add_variables(
-  #  "fg" = "#2F2E2E",
-  #  "primary" = "#685bb5",
-  #  "secondary" = "#E5284C",
-  #  "base-font" = "Manrope",
-  #  "code-font" = "Manrope",
-  #  "heading-font" = "Kiwi Maru",
-  #  "enable-shadows" = TRUE,
-  #  "bg" = "#F3F3F3"
-  #)
 
   tagList(
     # Leave this function for adding external resources

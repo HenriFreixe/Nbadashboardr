@@ -206,7 +206,7 @@ off_rating_evo_interactive <- function(start_season = '2011-12', end_season = '2
     dplyr::left_join(av_efficiency_range(start_season, end_season), by = c("season")) %>%
     dplyr::rename('off_rating' = 'off_rating.x', 'av_off_rating' = 'off_rating.y') %>%
     dplyr::mutate(fill = dplyr::if_else(min =='yes','#2E4EB8','#de425b'),
-                  tooltip_label = glue::glue("<div style ='font-family:Kiwi Maru;'><span style = 'font-size:10pt'>{team_name}</span><hr style='margin-top:5px;margin-bottom:1px;border:0;height:0;border-top:1px solid rgba(0,0,0,0.1);border-bottom:1px solid rgba(255,255,255,0.3);'/><span style = 'font-size:10pt'>Offensive efficiency : {round(off_rating,digits = 1)}</span></div>"))
+                  tooltip_label = glue::glue("<div style ='font-family:{court_themes('font')};'><span style = 'font-size:10pt'>{team_name}</span><hr style='margin-top:5px;margin-bottom:1px;border:0;height:0;border-top:1px solid rgba(0,0,0,0.1);border-bottom:1px solid rgba(255,255,255,0.3);'/><span style = 'font-size:10pt'>Offensive efficiency : {round(off_rating,digits = 1)}</span></div>"))
 
   ##Dataset geom_line
 
@@ -272,18 +272,11 @@ off_rating_evo_interactive <- function(start_season = '2011-12', end_season = '2
                                     shape = 21,
                                     size = 7,
                                     stroke = 1) +
-    ggtext::geom_richtext(ggplot2::aes(x = 7.5,
-                              y = 97.5),
-                          label ="<span style = 'font-size:12pt;color:#ccb076;'>Trading off long 2-point shots<br> for 3-point shots helped boost <br>Offensive Efficiency in the 2010s</span>",
-                          family = 'Kiwi Maru',
-                          fill = NA,
-                          label.color = NA,
-                          label.padding = grid::unit(rep(0,4),"pt")) +
     ggplot2::guides(color = FALSE, fill = FALSE) +
     ggplot2::scale_fill_identity() +
     ggplot2::scale_color_identity() +
     ggplot2::labs(title = glue::glue("<span style = 'color:{color_titles};'>{team_name_titles}</span> Offensive Efficiency and <br> shooting split evolution <span style = 'color:#CBA049;'>| {glue::glue('{stringr::str_sub(start_season,end = 4)}-{stringr::str_sub(end_season, start = 6)}')}</span>"),
-                  subtitle = glue::glue("<span style = 'color:{color_titles};font-size:{font_size_titles}'>{(team_name_titles)}</span> Offensive Efficiency went from <span style = 'font-size:18pt;'>{round(pre_efficiency, digits = 1)}</span> to <span style = 'font-size:18pt;'>{round(post_efficiency,digits = 1)}</span> pts per 100 possessions <br> Points represent <span style = 'color:#de425b;font-size:18pt'> season-highs </span> and <span style = 'color:#2E4EB8;font-size:18pt'>season-lows</span>")) +
+                  subtitle = glue::glue("<span style = 'color:{color_titles};font-size:{font_size_titles}'>{(team_name_titles)}</span> Offensive Efficiency went from <span style = 'font-size:18pt;'>{round(pre_efficiency, digits = 1)}</span> to <span style = 'font-size:18pt;'>{round(post_efficiency,digits = 1)}</span> pts per 100 possessions <br>Points represent <span style = 'color:#de425b;font-size:18pt'> season-highs </span> and <span style = 'color:#2E4EB8;font-size:18pt'>season-lows</span>")) +
     ggplot2::theme_minimal(base_size = 22) +
     theme_dark_cap() +
     ggplot2::theme(plot.title = ggtext::element_markdown(hjust=.5,
@@ -299,6 +292,7 @@ off_rating_evo_interactive <- function(start_season = '2011-12', end_season = '2
                    axis.title = ggplot2::element_blank())
 
 }
+
 
 ### Second plot, stacked bars
 
@@ -321,7 +315,7 @@ shot_frequency <- function(start_season = '2011-12',end_season ='2020-21' ,team 
                       position = "dodge",
                       color = "grey20",
                       width = .75) +
-    ggplot2::labs(subtitle = glue::glue("Three point shots went from <span style = 'font-size:18pt'>{dataset2 %>% dplyr::filter(shot_distance == 'share_3') %>% head(1) %>%  dplyr::pull(share) %>% scales::percent() }</span> to <span style = 'font-size:18pt'>{dataset2 %>% dplyr::filter(shot_distance == 'share_3') %>% tail(1) %>% dplyr::pull(share) %>% scales::percent()}</span><br> of all<span style = 'color:#CBA049;font-size:18pt'>{dplyr::if_else(team =='global','',as.character(glue::glue(' {get_last_name(team)}')))}</span> shots taken in the time span"),
+    ggplot2::labs(subtitle = glue::glue("Three point shots went from <span style = 'font-size:18pt'>{dataset2 %>% dplyr::filter(shot_distance == 'share_3') %>% head(1) %>%  dplyr::pull(share) %>% scales::percent() }</span> to <span style = 'font-size:18pt'>{dataset2 %>% dplyr::filter(shot_distance == 'share_3') %>% tail(1) %>% dplyr::pull(share) %>% scales::percent()}</span> of all<span style = 'color:#CBA049;font-size:18pt'>{dplyr::if_else(team =='global','',as.character(glue::glue(' {get_last_name(team)}')))}</span> shots taken in the time span<br> Trading off long 2 point shots for 3 point shots helped boost offensive efficiency"),
                   caption = glue::glue("Visualisation by Henri Freixe • Sources : Nba.com, Basketball-reference.com")) +
     ggplot2::scale_fill_identity(guide = "legend",
                                  labels = c("Mid-range<br>shooting frequency","3 point<br>shooting frequency")) +
@@ -408,13 +402,14 @@ plot_off_evo_interactive <- function(start_season = "2011-12",end_season = "2020
   plot <- (a[[1]] / a[[2]]) & ggplot2::theme(plot.background = ggplot2::element_rect(fill = court_themes('court'),color = court_themes('court')))
 
   plot_with_logo <- plot + patchwork::inset_element(a[[3]], left = -0.075, top = 2.45, right = 0.125, bottom = 2.25)
-
-  ggiraph::girafe(ggobj = plot_with_logo,
-                  width_svg = 12,
-                  height_svg = 12,
-                  options = list(ggiraph::opts_tooltip(use_fill = TRUE),
-                                 ggiraph::opts_hover(css = "fill:red;"),
-                                 ggiraph::opts_toolbar(saveaspng = FALSE),
-                                 ggiraph::opts_sizing(rescale = FALSE)))
-
 }
+#  ggiraph::girafe(ggobj = plot_with_logo,
+#                  width_svg = 12,
+#                  height_svg = 12,
+#                  options = list(ggiraph::opts_tooltip(use_fill = TRUE),
+#                                 ggiraph::opts_hover(css = "fill:red;"),
+#                                 ggiraph::opts_toolbar(saveaspng = FALSE),
+#                                 ggiraph::opts_sizing(rescale = FALSE)))
+#
+#}
+
