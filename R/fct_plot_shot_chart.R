@@ -578,25 +578,21 @@ plot_court <- function(player,
                         color = "grey5",
                         shape = 21,
                         stroke = 1) +
-    ggtext::geom_richtext(data = tibble::tibble(label = c("High","Medium","Low"), size = c(15,9,3)) %>%
+    ggplot2::geom_text(data = tibble::tibble(label = c("High","Medium","Low"), size = c(15,9,3)) %>%
                             dplyr::mutate(x = dplyr::row_number()*0.25) %>% dplyr::slice(1),
                           mapping = ggplot2::aes(x = x,
                                                  y = 1,
                                                  label = label),
-                          fill = NA,
                           color = court_themes('lines'),
                           family = court_themes('font'),
-                          label.color = NA,
                           nudge_x = -0.25) +
-    ggtext::geom_richtext(data = tibble::tibble(label = c("High","Medium","Low"), size = c(15,9,3)) %>%
+    ggplot2::geom_text(data = tibble::tibble(label = c("High","Medium","Low"), size = c(15,9,3)) %>%
                             dplyr::mutate(x = dplyr::row_number()*0.25) %>% dplyr::slice(dplyr::n()),
                           mapping = ggplot2::aes(x = x,
                                                  y = 1,
                                                  label = label),
-                          fill = NA,
                           color = court_themes('lines'),
                           family = court_themes('font'),
-                          label.color = NA,
                           nudge_x = 0.25) +
     ggplot2::scale_size_identity() +
     ggplot2::coord_cartesian(xlim = c(-.125,1.125)) +

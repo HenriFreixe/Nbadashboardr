@@ -201,15 +201,13 @@ plot_bump_chart <- function(season = '2020-21',team = 'global', variable = 'sala
       color = court_themes('court'),
       size = .5
     ) +
-    ggtext::geom_richtext(ggplot2::aes(x = -.55,
+    ggplot2::geom_text(ggplot2::aes(x = -.55,
                                        y = -1,
                                        label = "Teams ranked by Win%"),
                           family = court_themes('font'),
                           color = court_themes('lines'),
                           hjust = 1,
-                          fill = NA,
-                          size = 6,
-                          label.color = NA) +
+                          size = 6) +
     ggtext::geom_richtext(ggplot2::aes(x = .55,
                                        y = -1,
                                        label = glue::glue("Teams ranked by {column_label}")),
