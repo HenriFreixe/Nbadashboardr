@@ -28,16 +28,13 @@ mod_scoring_perf_selector_ui <- function(id){
   HTML("<details>
   <summary>Visualisation Choices and Definitions</summary>
 <h5 class = 'text-primary'> 1) Visualisation choices</h5>
-  This visualisation is a <b>ranked bar chart</b> of the 10 best NBA players in a given statistical category, in a given season.
-  In relevant instances (Box Plus-Minus and Rebounding), the offensive and defensive components of the metric are highlighted so as to put forth the statistical particularities of each player.
-         Furthermore, it gives valuable information concerning the player's preferred shooting spots.
+This visualisation is a <b>mapping</b> of the best scorers in the NBA in terms of volume and efficiency.
+  The players located on the top-right are the better scorers as they are both prolific and efficient scorers.
          <br>
          <h5 class = 'text-primary'> 2) Definitions</h5>
         <ul style = 'padding-left:20px'>
-           <li><b>BPM</b> : Box Plus-Minus is an all-in-one metric that assesses a player's value based on its statistical profile as well as the results of the team while on the court.</li>
-           <li><b>Rebounds</b> : A rebound is performed when a player obtains the ball after a missed field goal attempt. Rebounds can be Offensive (when the player's team missed the shot) or Defensive (when the opponent missed the shot) </li>
-           <li><b>Blocks</b> : A block is performed when a player tips or deflects an opponent's shot</li>
-           <li><b>Steals</b> : A steal is performed when a player intercepts the ball</li>
+           <li><b>True Shooting Percentage</b> : A Compounded measure of a player's efficiency taking into consideration its 2 point shot %, 3 point shot % and Free Throw % as well as the volume of each shot type</li>
+           <li><b>Scoring Rate</b> : Points scored every 75 possessions by a player, it is a measure of a player's scoring volume independent of the pace of a basket-ball game (meaning the number of possessions played in a game</li>
          </ul>
          </details>"))
   )

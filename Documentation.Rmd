@@ -1,30 +1,790 @@
 ---
-title: "Package Documentation"
-author: "Henri Freixe"
-date: "8/16/2021"
-output: html_document
+title: "NBA Analytics Dashboard - Documentation <img src='https://a.espncdn.com/combiner/i?img=/i/teamlogos/leagues/500/nba.png' alt='NBA Logo' width = 15% style = 'text-align:center;'>"
+pagetitle: "NBA Analytics Dashboard"
+output: 
+  html_document:
+    includes:
+       in_header: header.html
+    theme:
+      bg : "#E8E8E8"
+      fg : "#2F2E2E"
+      primary : "#685bb5"
+      secondary : "#E5284C"
+      base-font : "Manrope"
+      code-font : "Manrope"
+      heading-font : "Kiwi Maru"
+      bootswatch : "minty"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE,  warning = FALSE,  fig.retina = 1)
+#https://getbootstrap.com/docs/4.4/components/pagination/
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{css}
+h1 {
+    text-align: center;
+}
+#https://rstudio.github.io/distill/figures.html
 ```
 
-## Including Plots
+```{r}
+devtools::load_all()
+#Run if Kiwi Maru is not installed
+#sysfonts::font_add("Kiwi Maru",regular = #"fonts/fonts/kiwi-maru-v6-latin-regular.ttf")
+#  showtext::showtext_auto()
+#library(readr)
+#library(dplyr)
+#library(httr)
+#library(jsonlite)
+#library(purrr)
+#library(furrr)
+#library(ggplot2)
+#library(patchwork)
+#library(systemfonts)
+#library(sysfonts)
+#library(extrafont)
+#library(gfonts)
+#library(systemfonts)
+#library(showtext)
+#library(ggtext)
+#library(tidyr)
+#library(tictoc)
+#library(ggiraph)
+#library(ggbump)
+#library(RCurl)
+#library(gt)
+#library(htmltools)
+#library(future)
+#source("theming.R")
+#source("shot_chart_fct.R")
+#source("teams_net_rtg.R")
+#source("scoring_performance.R")
+#source("off_eff_recap.R")
+#source("win_perc.R")
+#source("player_rank.R")
+#source("teams_table.R")
+#source("players_table.R")
+#source("season_recap.R")
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+<br>
+<div class="jumbotron" style = "background-color:#333333;">
+
+<p style="color:#999999">This project aims at providing a thought-provoking outlook on the evolution of the NBA in the 21st Century.<br>
+It takes the form of a Shiny App, with each of the following visualisations and their respective Input Variables <br>
+The document is organized in three tabs with a deep-dive on <span class = "text-secondary">Player Performance</span> - with 3 visualisations and a table - a breakdown of <span class = "text-secondary">Team Performance</span> - with 3 visualisations and a table - and a final <span class = "text-secondary">Season Recap Visualisation.</span></p>
+</div>
+
+# {.tabset .tabset-fade .tabset-pills}
+## 1) NBA Players breakdown
+
+<h3 class = "text-secondary">A) Shot Chart</h3>
+
+#### Input variables : 
+1. Season
+2. Player
+
+<details>
+<summary> Data and Visualisation Choices</summary>
+
+<h5 class = "text-primary"> 1) The Data</h5>
+
+The data necessary for this visualisation was scraped from the <a href="https://www.nba.com/stats/events/?flag=3&CFID=155&CFPARAMS=2020-21&TeamID=1610612747&ContextMeasure=FGA&Season=2020-21&section=team&sct=hex">NBA.com API</a>, partly inspired from an <a href="https://www.owenlhjphillips.com/new-blog/2020/6/11/how-to-download-nba-shot-data-with-r">Owen Phillips blog post</a> adaptation of the {ballr} package (which proposed a function for scraping a particular dataset from the NBA.com API).
+
+Plenty of datasets are accessible from the NBA.com API, which was the main source for the project.
+
+For this specific visualisation, the goal was to visualise **shooting volume** and **shooting efficiency** by zone for each NBA player.
+
+The main datasets at the source of the following visualisation are as follows :
+
+* `{get_shot_data_player(player, season)}` <br>
+For this specific dataset, I joined the **league-wide** shooting volume and efficiency data to the **player specific data** in order to get a sense of the **player's efficiency by zone**, compared to league average.
+
+```{r echo=TRUE}
+get_shot_data_player("Stephen Curry", season = "2020-21") %>% 
+   rmarkdown::paged_table()
+```
+
+
+* `{get_subtitles_tbl(player, season)}`<br>
+I also gathered the **traditional statistics** of the player necessary for the plot subtitles (points, overall 2 point shot efficiency, overall 3 point shot efficiency)
+
+```{r echo=TRUE}
+get_subtitles_tbl("Stephen Curry", season = "2020-21") %>% 
+   rmarkdown::paged_table()
+```
+
+* `{get_team_logo_from_player(player, season)}` & `{get_player_picture(player, season)}`<br>
+Finally, I created functions to get the urls for the **Player Pictures** and **Team Logos**
+
+<h5 class = "text-primary"> 2) Visualisation choices</h5>
+
+The visualisation is inspired from Espn's Kirk Goldsberry's infamous **shot charts**, and the <a href="https://www.owenlhjphillips.com/new-blog/2020/6/25/how-to-make-nba-shots-charts-in-r">code for drawing the court</a> also comes from Owen Phillips' adaptation of the ballr package.
+
+Instead of the tricky hexbins, I went with a **shooting proficiency scatterplot** with a size variable associated with volume and a fill variable associated with efficiency.
+In order to have more flexibility drawing the legends than using the traditional `{ggplot2}` API, I drew the two legends as separate ggplots, which I then added to the scatterplot using the `{patchwork}` package.
+
+In order to give further visual upside to the chart, I used the `{ggtext}` package to plot the player pictures and team logo.
+
+I will have to tweak the size parameter variable of the geom points, as it does not discriminate the variance in volume shooting enough in my view.
+
+This specific instance of the visualisation is the result of the function `plot_court(player = "Stephen Curry", season = "2020-21")` and shows the shooting performance of **Stephen Curry** in the **2020-21 NBA Season**.
+As we can see, he was both a prolific and efficient shooter this season.
+
+<h5 class = "text-primary"> 3) Specific Definitions</h5>
+
+* **Shooting Volume :** Number of shots attempted by the player in each location
+* **Shooting Efficiency :** Difference between the Shooting Percentage the player achieved and the League Average in each location
+
+</details>
+<br>
+
+```{r plot1,fig.height=12, fig.width=12}
+#tic()
+ggiraph::girafe(ggobj = plot_court(player = "Stephen Curry", season = "2020-21"),width_svg = 12,
+                        height_svg = 12,
+                        options = list(ggiraph::opts_toolbar(saveaspng = FALSE),
+                                       ggiraph::opts_sizing(rescale = FALSE)))
+#toc()
+```
+
+<hr>
+
+<h3 class = "text-secondary">B) Scoring performance analysis</h3>
+
+#### Input variables : 
+1. Season
+2. Team
+
+<details>
+<summary> Data and Visualisation Choices</summary>
+
+<h5 class = "text-primary"> 1) The Data</h5>
+
+The data necessary for this visualisation was partly scraped from the <a href="https://www.nba.com/stats/events/?flag=3&CFID=155&CFPARAMS=2020-21&TeamID=1610612747&ContextMeasure=FGA&Season=2020-21&section=team&sct=hex">NBA.com API</a> and partly scraped from <a href="https://www.basketball-reference.com/leagues/NBA_2020_advanced.html#advanced_stats::27">basketball-reference</a>.
+
+The main datasets at the source of the following visualisation are as follows :
+
+* `{get_mean_ts_pct(season)}`<br>
+I scraped the <a href="https://widgets.sports-reference.com/wg.fcgi?css=1&site=bbr&url=%2Fleagues%2FNBA_2020.html&div=div_advanced-team">basketball-reference</a> website to get the League Average efficiency metric used for the following visualisation, **True Shooting Percentage**.
+
+```{r echo=TRUE}
+get_mean_ts_pct(season = "2020-21")
+```
+
+* `{get_scoring_rate(season)}` <br>
+
+For this specific dataset, I scraped the per-possession statistics from the <a href="https://www.nba.com/stats/players/advanced/?sort=GP&dir=-1x">NBA.com API</a> to get the 100 **best volume scorers** in a specific season, as well as their **shooting efficiency**.
+
+```{r echo=TRUE}
+get_scoring_rate(season = "2020-21") %>% 
+   rmarkdown::paged_table()
+```
+
+In order to speed up the r code, I used the `{future}` version of the `{purrr}`package, the `{furrr}` package.
+
+<h5 class = "text-primary"> 2) Visualisation choices</h5>
+
+This visualisation is a **mapping** of the best scorers in the NBA in terms of volume and efficiency.
+
+In order to get a more complete picture of the situation, I used the `{ggiraph}` package to customize the geom points tooltip to add the selected player's name, picture and relevant statistics using HTML and CSS.
+
+This specific instance of the visualisation is the result of the function `plot_scoring_rate(team = "San Antonio Spurs", season = "2020-21")` and puts forth the best scorers of the **2020-21 NBA Season** while highlighting the **San Antonio Spurs** players.
+
+<h5 class = "text-primary"> 3) Specific Definitions</h5>
+
+* **True Shooting Percentage :** A Compounded measure of a player's efficiency taking into consideration its 2 point shot %, 3 point shot % and Free Throw % as well as the volume of each shot type
+* **Scoring Rate :** Points scored every 75 possessions by a player, it is a measure of a player's scoring volume independent of the pace of a basket-ball game (meaning the number of possessions played in a game
+
+</details>
+<br>
+
+```{r plot2,fig.height=6, fig.width = 6}
+#tic()
+ ggiraph::girafe(ggobj = 
+    plot_scoring_rate(season = "2020-21",team = "San Antonio Spurs"),
+                 width_svg = 12,
+                        height_svg = 12,
+                        options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
+                                       ggiraph::opts_hover(css = "fill:red;"),
+                                       ggiraph::opts_toolbar(saveaspng = FALSE),
+                                       ggiraph::opts_sizing(rescale = FALSE)))
+#toc()
+#https://learnui.design/tools/data-color-picker.html#divergent
+```
+
+<hr>
+
+<h3 class = "text-secondary">C) Player rankings</h3>
+
+#### Input variables :
+1. Season
+2. Ranking Variable :
+   * BPM (Box Plus-Minus)
+   * Points
+   * Assists
+   * Rebounds
+   * Blocks
+   * Steals
+   
+<details>
+<summary> Data and Visualisation Choices</summary>
+
+<h5 class = "text-primary"> 1) The Data</h5>
+
+The data necessary for this visualisation was partly scraped from the <a href="https://www.nba.com/stats/events/?flag=3&CFID=155&CFPARAMS=2020-21&TeamID=1610612747&ContextMeasure=FGA&Season=2020-21&section=team&sct=hex">NBA.com API</a> and from <a href="https://www.basketball-reference.com/leagues/NBA_2020_advanced.html#advanced_stats::27">basketball-reference</a>.
+
+The goal for this visualisation was to provide a ranking of the **top 10 best players** in each of the main statistical categories.
+
+The main datasets at the source of the following visualisation are as follows :
+
+* `{get_bpm_join(season)}`<br>
+I scraped the <a href="https://www.basketball-reference.com/leagues/NBA_2020_advanced.html#advanced_stats::27">basketball-reference</a> website in order to join an all-in-one metric designed to estimate Overall player impact, **Box Plus-Minus**, which has an offensive, and defensive component, to the <a href="https://www.nba.com/stats/players/traditional/?sort=PTS&dir=-1">NBA.com API-scraped</a> player statistics. 
+
+```{r echo=TRUE}
+get_bpm_join(season = "2020-21") %>% 
+   rmarkdown::paged_table()
+```
+
+<h5 class = "text-primary"> 2) Visualisation choices</h5>
+
+This visualisation is a **ranked bar chart** of the 10 best NBA players in a specific statistical category, in a specific season.
+
+In relevant instances (Box Plus-Minus and Rebounding), the offensive and defensive components of the metric are highlighted so as to put forth the statistical particularities of each player.
+
+In order to give further visual upside to the chart, I used the `{ggtext}` package to plot the player pictures as axis.
+
+In order to get a more complete picture of the situation, I used the `{ggiraph}` package to customize the geom points tooltip to add the selected player's name, picture and relevant statistics using HTML and CSS.
+
+This specific instance of the visualisation is the result of the function `plot_player_ranking_interactive(variable = "bpm", season = "2020-21")` and puts forth the best players of the **2020-21 NBA Season** in terms of **Box Plus-Minus**.
+
+<h5 class = "text-primary"> 3) Specific Definitions</h5>
+
+* **BPM :** Box Plus-Minus is an all-in-one metric that assesses a player's value based on the player's statistical profile as well as the results of the team while the player is on the court
+* **Rebound :** A rebound is performed when a player obtains the ball after a missed field goal attempt. Rebounds can be Offensive (when the player's team missed the shot) or Defensive (when the opponent missed the shot)
+* **Block :** A block is performed when a player tips or deflects an opponent's shot
+* **Steal :** A steal is performed when a player intercepts the ball
+
+</details>
+<br>
+
+
+```{r plot3, fig.height = 6, fig.width=8}
+#tic()
+
+  ggiraph::girafe(ggobj = plot_player_ranking_interactive(variable = "bpm"),
+                  width_svg = 16,
+                      height_svg = 12,
+                      options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
+                                     ggiraph::opts_hover(css = "fill:red;"),
+                                     ggiraph::opts_toolbar(saveaspng = FALSE),
+                                     ggiraph::opts_sizing(rescale = TRUE)))
+#toc()
+```
+
+<hr>
+
+<h3 class = "text-secondary">D) Players table</h3>
+
+#### Input variables :
+1. Season
+2. Ranking Variable :
+   * BPM (Box Plus-Minus) :
+      * Global
+      * Offensive
+      * Defensive
+   * Points
+   * Assists
+   * Rebounds
+   * Blocks
+   * Steals
+   
+   
+<details>
+<summary> Data and Visualisation Choices</summary>
+
+<h5 class = "text-primary"> 1) The Data</h5>
+
+The data necessary for this table was partly scraped from the <a href="https://www.nba.com/stats/events/?flag=3&CFID=155&CFPARAMS=2020-21&TeamID=1610612747&ContextMeasure=FGA&Season=2020-21&section=team&sct=hex">NBA.com API</a>, from <a href="https://www.basketball-reference.com/leagues/NBA_2020_advanced.html#advanced_stats::27">basketball-reference</a>, from <a href="https://basketball.realgm.com/nba/allstar/game/rosters/2020">basketball.realgm.com</a> and from the <a href="http://www.espn.com/nba/history/awards/_/id/33">ESPN.com website</a>.
+
+The goal for this table was to provide a ranking of the **top 25 best players** in each of the main statistical categories with a context of team performance.
+
+The main datasets at the source of the following visualisation are as follows :
+
+* `{get_bpm_join(season)}`<br>
+I scraped the <a href="https://www.basketball-reference.com/leagues/NBA_2020_advanced.html#advanced_stats::27">basketball-reference</a> website in order to join an all-in-one metric designed to estimate Overall player impact, **Box Plus-Minus**, which has an offensive, and defensive component, to the <a href="https://www.nba.com/stats/players/traditional/?sort=PTS&dir=-1">NBA.com API-scraped</a> player statistics. 
+
+```{r}
+get_bpm_join(season = "2019-20") %>% 
+   rmarkdown::paged_table()
+```
+
+* `{get_playoff_teams(season)}`<br>
+I scraped the <a href="https://www.basketball-reference.com/playoffs/">basketball-reference</a> website in order to get a vector of the teams that qualified to the **NBA Playoffs**
+
+```{r echo=TRUE}
+get_playoff_teams(season = "2019-20")
+```
+
+* `{get_champion(.season)}`<br>
+I scraped the <a href="https://www.basketball-reference.com/playoffs/">basketball-reference</a> website in order to get the name of the **NBA Champion** in a particular season
+
+```{r echo=TRUE}
+get_champion(.season = "2019-20")
+```
+
+* `{get_all_stars(season)}`<br>
+I scraped the <a href="https://basketball.realgm.com/nba/allstar/game/rosters/2020">basketball.realgm.com</a> website in order to get a table of the players that were honored with a selection to the **NBA All-Star Game** in a particular NBA Season
+
+```{r echo=TRUE}
+get_all_stars(season = "2019-20") %>% 
+   rmarkdown::paged_table()
+```
+
+* `{get_award(award, .season)}`<br>
+I scraped the <a href="http://www.espn.com/nba/history/awards/_/id/33">ESPN.com website</a> in order to get the name of the players that were honored with the main **NBA Season Awards** (MVP, Finals MVP...)
+
+```{r echo=TRUE}
+get_award(award = "mvp") %>% 
+   rmarkdown::paged_table()
+```
+
+<h5 class = "text-primary"> 2) Visualisation choices</h5>
+
+This visualisation is a **table** of the 25 best NBA players in the selected statistical category, in a specific season.
+
+I used the `{gt}` package to customize the table, but might decide to look into the `{reactable}` API for this visualisation in my final output, should I prefer an interactive table.
+
+This specific instance of the visualisation is the result of the function `plot_players_table(variable = "bpm", season = "2020-21")` and puts forth the best players of the **2020-21 NBA Season** in terms of **Box Plus-Minus**.
+
+<h5 class = "text-primary"> 3) Specific Definitions</h5>
+
+* **BPM :** Box Plus-Minus is an all-in-one metric that assesses a player's value based on the player's statistical profile as well as the results of the team while the player is on the court
+* **Rebound :** A rebound is performed when a player obtains the ball after a missed field goal attempt. Rebounds can be Offensive (when the player's team missed the shot) or Defensive (when the opponent missed the shot)
+* **Block :** A block is performed when a player tips or deflects an opponent's shot
+* **Steal :** A steal is performed when a player intercepts the ball
+* **All-Star :** An All-Star is a player selected to participate to the NBA All-Star Game. It is an award typically granted to the 24 best players in the NBA
+
+</details>
+<br>
+
+```{r table1}
+#tic()
+plot_players_table(season = "2019-20", variable = "bpm")
+#toc()
+```
+
+<br>
+
+## 2) NBA Teams breakdown
+
+<h3 class = "text-secondary">A) Teams net rating (off vs. def.)</h3>
+
+#### Input variables :
+1. Season
+
+<details>
+<summary> Data and Visualisation Choices</summary>
+
+<h5 class = "text-primary"> 1) The Data</h5>
+
+The data necessary for this table was partly scraped from the <a href="https://www.nba.com/stats/events/?flag=3&CFID=155&CFPARAMS=2020-21&TeamID=1610612747&ContextMeasure=FGA&Season=2020-21&section=team&sct=hex">NBA.com API</a> and from <a href="https://www.basketball-reference.com/playoffs/">basketball-reference</a>.
+
+The goal for this plot was to provide an overview of the best teams, both in terms of Offensive and Defense.
+
+The main datasets at the source of the following visualisation are as follows :
+
+* `{get_team_advanced(season)}`<br>
+I scraped the <a href="https://www.nba.com/stats/teams/traditional/">NBA.com API</a> website in order to get the advanced team statistics I was looking for, namely **Offensive Efficiency** (which corresponds to the amount of points scored by a given team every 100 possessions) and **Defensive Efficiency** (which corresponds to the amount of points scored against a given team every 100 possessions)
+
+```{r echo=TRUE}
+get_team_advanced(season = "2020-21") %>% 
+   rmarkdown::paged_table()
+```
+
+* `{get_champion(.season)}`<br>
+I scraped the <a href="https://www.basketball-reference.com/playoffs/">basketball-reference</a> website in order to get the name of the **NBA Champion** in a particular season
+
+```{r echo=TRUE}
+get_champion(.season = "2020-21") #No Champion yet in 2020-21 as the season is not over
+```
+
+<h5 class = "text-primary"> 2) Visualisation choices</h5>
+
+This visualisation is a **mapping** of the 30 NBA teams in terms of Offensive and Defensive Efficiency.
+The better a given team is at Offense and Defense, the higher and to the right its position is within the mapping.
+
+In order to give further visual upside to the chart, I used the `{ggtext}` package to plot the team logos.
+
+In order to get a more complete picture of the situation, I used the `{ggiraph}` package to customize the geom points tooltip to add the selected team logo's name and relevant statistics using HTML and CSS.
+
+This specific instance of the visualisation is the result of the function `plot_players_table(variable = "bpm", season = "2020-21")` and showcases teams efficiency in the **2020-21 NBA Season**.
+
+<h5 class = "text-primary"> 3) Specific Definitions</h5>
+
+* **Offensive Efficiency :** Offensive efficiency (or Offensive Rating) corresponds to the number of points scored by a team every 100 possessions. The higher the number the better the team is at offense
+* **Defensive Efficiency :** Defensive efficiency (or Defensive Rating) corresponds to the number of points scored against a team every 100 possessions. The lower the number the better the team is at defense
+
+</details>
+<br>
+
+```{r plot4}
+#tic()
+
+  ggiraph::girafe(ggobj = plot_teams_efficiency_interactive(),
+                  width_svg = 12,
+                          height_svg = 12,
+                          options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
+                                         ggiraph::opts_hover(css = "fill:red;"),
+                                         ggiraph::opts_toolbar(saveaspng = FALSE),
+                                         ggiraph::opts_sizing(rescale = FALSE)))
+#toc()
+```
+
+<hr>
+
+<h3 class = "text-secondary">B) Teams offensive efficiency / 3 points shooting</h3>
+
+#### Input variables : 
+1. League Average vs. Specific Team
+
+<details>
+<summary> Data and Visualisation Choices</summary>
+
+<h5 class = "text-primary"> 1) The Data</h5>
+
+The data necessary for this visualisation was partly scraped from the <a href="https://www.nba.com/stats/events/?flag=3&CFID=155&CFPARAMS=2020-21&TeamID=1610612747&ContextMeasure=FGA&Season=2020-21&section=team&sct=hex">NBA.com API</a> and from <a href="https://www.basketball-reference.com/leagues/NBA_2020_ratings.html">basketball-reference</a>.
+
+The goal for this table was to provide an overview of the evolution of Offensive Strategy and Offensive Efficiency in the 2010s.
+
+The main datasets at the source of the following visualisation are as follows :
+
+* `{get_all_seas_team_shoot_split(start_season, end_season)}`<br>
+I scraped the <a href="https://www.nba.com/stats/events/?flag=3&CFID=155&CFPARAMS=2020-21&TeamID=1610612747&ContextMeasure=FGA&Season=2020-21&section=team&sct=hex">NBA.com API</a> in order to get the share of **shots taken by each team in each zone**, to see whether there was relevant conclusions to be made.
+It turns out, indeed, that teams traded off mid-range shots (shots taken that were neither near the rim, nor behind the three point line) for three-point shots between 2011 and 2021 mostly.
+
+```{r echo=TRUE}
+get_all_seas_team_shoot_split() %>% 
+   rmarkdown::paged_table()
+```
+
+
+* `{bbal_ref_rating(start_season, end_season, team)}`<br>
+I scraped the <a href="https://www.basketball-reference.com/leagues/NBA_2020_ratings.html">basketball-reference</a> website in order to get the Offensive Efficiency (also called Offensive Rating) for each team, each season, between 2011 and 2021.
+It turns out the average Offensive Efficiency kept rising between 2011 and 2021.
+
+```{r echo=TRUE}
+bbal_ref_rating() %>% 
+   rmarkdown::paged_table()
+```
+
+
+
+<h5 class = "text-primary"> 2) Visualisation choices</h5>
+
+This visualisation is a **parallel line chart and bar chart** of the evolution of average offensive efficiency on the one hand, and of the share of shots taken that are three point shots on the other hand.
+It turns out that trading off mid-range shots for three point shots correlates nicely with offensive efficiency.
+
+In order to get a more complete picture of the situation, I used the `{ggiraph}` package to customize the outlying geom points tooltip to add the selected team's name and relevant statistic using HTML and CSS.
+
+I also used the `{patchwork}` package to show merge charts in the same visualisation.
+
+In order to give further visual upside to the chart, I used the `{ggtext}` package to plot the team logo.
+
+In order to speed up the r code, I used the `{future}` version of the `{purrr}`package, the `{furrr}` package.
+
+There is also a team argument to this function, so as to show the selected team's offensive efficiency evolution, on top of the League Average and outliers (season-highs and season-lows) on the one hand, and the selected team's shooting split evolution on the other hand.
+
+This specific instance of the visualisation is the result of the function `plot_off_evo_interactive(team = "global")` and showcases **League Average** offensive efficiency and shooting split evolution from 2011-2012 until 2020-2021.
+
+<h5 class = "text-primary"> 3) Specific Definitions</h5>
+
+* **Offensive Efficiency :** Offensive efficiency (or Offensive Rating) corresponds to the number of points scored by a team every 100 possessions. The higher the number the better the team is at offense
+* **Mid-range shots :** Mid-range shots are shots that are neither worth 3 points nor near the basket. While they are typically scored at a higher percentage than 3 point shots since they are shorter-ranged, they typically yield much lower value in terms of efficiency as the percentage difference does not make-up for the difference in value
+
+</details>
+<br>
+
+```{r plot5, fig.width=6, fig.height=6}
+#tic()
+  ggiraph::girafe(ggobj = plot_off_evo_interactive(start_season = "2011-12",
+                         end_season = "2020-21",
+                         team = "global"),
+                  width_svg = 12,
+                      height_svg = 12,
+                      options = list(ggiraph::opts_tooltip(use_fill = TRUE),
+                                     ggiraph::opts_hover(css = "fill:red;"),
+                                     ggiraph::opts_toolbar(saveaspng = FALSE),
+                                     ggiraph::opts_sizing(rescale = FALSE)))
+#toc()
+```
+
+<hr>
+
+<h3 class = "text-secondary">C) Teams Bumpchart</h3>
+
+#### Input variables : 
+1. Season
+2. Team
+3. Variable
+   * Salary
+   * Offensive Efficiency
+   * Defensive Efficiency
+   
+<details>
+<summary> Data and Visualisation Choices</summary>
+
+<h5 class = "text-primary"> 1) The Data</h5>
+
+The data necessary for this visualisation was partly scraped from the <a href="https://www.nba.com/stats/events/?flag=3&CFID=155&CFPARAMS=2020-21&TeamID=1610612747&ContextMeasure=FGA&Season=2020-21&section=team&sct=hex">NBA.com API</a>, from <a href="https://www.basketball-reference.com/leagues/NBA_2020_ratings.html">basketball-reference</a> and from <a href="https://hoopshype.com/salaries/">hoopshype.com</a>.
+
+The goal for this visualisation was to explore the correlation between Team Performance (represented by Win Percentage) with given variables (roster salary, offensive efficiency or defensive efficiency for example).
+
+The main datasets at the source of the following visualisation are as follows :
+
+* `{get_team_standings(season)}`<br>
+I scraped the <a href="https://www.nba.com/stats/teams/traditional/?sort=W_PCT&dir=-1&Season=2020-21&SeasonType=Regular%20Season">NBA.com</a> website in order to get the **Team Standings**, to get the Win/Loss record for each team in a given season.
+
+```{r echo=TRUE}
+get_team_standings(season = "2020-21") %>% 
+   rmarkdown::paged_table()
+```
+
+
+* `{get_salaries(season)}`<br>
+I scraped the <a href="https://hoopshype.com/salaries/">hoopshype.com</a> website in order to get a table of the roster salary for each team in a given season.
+
+```{r echo=TRUE}
+get_salaries(season = "2020-21") %>% 
+   rmarkdown::paged_table()
+```
+
+
+* `{bballref_efficiency_season(season)}` & `{bballref_def_efficiency_season(season)}` <br>
+I scraped the <a href="https://www.basketball-reference.com/leagues/NBA_2020_ratings.html">basketball-reference</a> website in order to get each team's offensive and defensive efficiency in a given season.
+
+```{r echo=TRUE}
+bballref_efficiency_season(season = "2020-21") %>% 
+   rmarkdown::paged_table()
+```
+
+```{r echo=TRUE}
+bballref_def_efficiency_season(season = "2020-21") %>% 
+   rmarkdown::paged_table()
+```
+
+
+
+<h5 class = "text-primary"> 2) Visualisation choices</h5>
+
+This visualisation is a **bump chart** of teams ranked by Win Percentage, and a specific variable (salary, off. efficiency or def. efficiency) in a given season, with a spotlight on the selected team.
+
+In order to give further visual upside to the chart, I used the `{ggtext}` package to plot the team logo.
+
+This specific instance of the visualisation is the result of the function `plot_bump_chart(season = "2020-21", variable = "salary",team = "Phoenix Suns")` and explores the relationship between **Win Percentage** and **Salary** in the **2020-21 NBA Season**.
+The **Phoenix Suns** look like the team that achieved the most from the least amount of salary roster.
+
+<h5 class = "text-primary"> 3) Specific Definitions</h5>
+
+* **Offensive Efficiency :** Offensive efficiency (or Offensive Rating) corresponds to the number of points scored by a team every 100 possessions. The higher the number the better the team is at offense
+* **Defensive Efficiency :** Defensive efficiency (or Defensive Rating) corresponds to the number of points scored against a team every 100 possessions. The lower the number the better the team is at defense
+
+</details>
+<br>
+
+
+```{r plot6, fig.height = 12, fig.width=16}
+#tic()
+ 
+   ggiraph::girafe(ggobj = plot_bump_chart(season = "2020-21",
+              team = "Phoenix Suns",
+              variable = 'salary'),
+              width_svg = 16,
+                    height_svg = 12,
+                    options = list(ggiraph::opts_toolbar(saveaspng = FALSE),
+                                   ggiraph::opts_sizing(rescale = TRUE)))
+#toc()
+```
+
+<hr>
+
+<h3 class = "text-secondary">D) Teams table</h3>
+
+#### Input variables : 
+1. Season
+2. Conference
+
+<details>
+<summary> Data and Visualisation Choices</summary>
+<h5 class = "text-primary"> 1) The Data</h5>
+
+The data necessary for this table was partly scraped from the <a href="https://www.nba.com/stats/events/?flag=3&CFID=155&CFPARAMS=2020-21&TeamID=1610612747&ContextMeasure=FGA&Season=2020-21&section=team&sct=hex">NBA.com API</a>, from <a href="https://www.basketball-reference.com/leagues/NBA_2020_advanced.html#advanced_stats::27">basketball-reference</a>, from <a href="https://basketball.realgm.com/nba/allstar/game/rosters/2020">basketball.realgm.com</a> and from the <a href="http://www.espn.com/nba/history/awards/_/id/33">ESPN.com website</a>.
+
+The goal for this table was to highlight the ranking of each team of a given **Conference** in a given season.
+
+The main datasets at the source of the following visualisation are as follows :
+
+* `{get_team_standings(season)}`& `{get_team_advanced_selections(season)}` &`{get_traditional_stats(season)}`<br>
+I scraped the <a href="https://www.nba.com/stats/teams/traditional/?sort=W_PCT&dir=-1&Season=2020-21&SeasonType=Regular%20Season">NBA.com</a> website in order to get the **Team Standings** (in particular the Win/Loss record for each team in a given season), the **Advanced Team Statistics** (in particular Efficiency and other per possession based metrics) and **Player Statistics** (in order to highlight the scoring statistics of the leading scorer for each NBA team).
+
+```{r echo=TRUE}
+get_team_advanced_selections(season = "2019-20") %>% 
+   rmarkdown::paged_table()
+```
+
+* `{get_playoff_teams(season)}`<br>
+I scraped the <a href="https://www.basketball-reference.com/playoffs/">basketball-reference</a> website in order to get a vector of the teams that qualified to the **NBA Playoffs**
+
+```{r}
+get_playoff_teams("2019-20")
+```
+
+
+* `{get_champion(season)}`<br>
+I scraped the <a href="https://www.basketball-reference.com/playoffs/">basketball-reference</a> website in order to get the name of the **NBA Champion** in a particular season
+
+```{r}
+get_champion(.season = "2019-20")
+```
+
+
+* `{get_all_stars(season)}`<br>
+I scraped the <a href="https://basketball.realgm.com/nba/allstar/game/rosters/2020">basketball.realgm.com</a> website in order to get a table of the players that were honored with a selection to the **NBA All-Star Game** in a particular NBA Season
+
+```{r echo=TRUE}
+get_all_stars(season = "2019-20") %>% 
+   rmarkdown::paged_table()
+```
+
+
+
+<h5 class = "text-primary"> 2) Visualisation choices</h5>
+
+This visualisation is a **table** ranking of the NBA teams in terms of Win Percentage, in a given conference, in a given season.
+
+I used the `{gt}` package to customize the table, but might decide to look into the `{reactable}` API for this visualisation in my final output, should I prefer an interactive table.
+
+This specific instance of the visualisation is the result of the function `plot_teams_table("2019-20", conf = "West")` and gives thought-provoking information about teams from the **Western Conference** in the **2019-20 NBA Season**.
+
+<h5 class = "text-primary"> 3) Specific Definitions</h5>
+
+* **Offensive Efficiency :** Offensive efficiency (or Offensive Rating) corresponds to the number of points scored by a team every 100 possessions. The higher the number the better the team is at offense
+* **Defensive Efficiency :** Defensive efficiency (or Defensive Rating) corresponds to the number of points scored against a team every 100 possessions. The lower the number the better the team is at defense
+* **Net rating :** The net rating is the difference between Offensive Efficiency and Defensive Efficiency. The higher the number the higher the overall value of the team
+* **All-Star :** An All-Star is a player selected to participate to the NBA All-Star Game. It is an award typically granted to the 24 best players in the NBA
+
+</details>
+<br>
+
+```{r table2}
+#tic()
+plot_teams_table("2019-20", conf = "West")
+#toc()
+#https://www.liamdbailey.com/post/making-beautiful-tables-with-gt/
+```
+
+<br>
+
+## 3) Season recap plot
+
+#### Input variable :
+1. Season
+
+<details>
+<summary> Data and Visualisation Choices</summary>
+
+<h5 class = "text-primary"> 1) The Data</h5>
+
+The data necessary for this table was partly scraped from the <a href="https://www.nba.com/stats/events/?flag=3&CFID=155&CFPARAMS=2020-21&TeamID=1610612747&ContextMeasure=FGA&Season=2020-21&section=team&sct=hex">NBA.com API</a>, from <a href="https://www.basketball-reference.com/awards/mvp.html">basketball-reference</a>, from <a href="https://basketball.realgm.com/nba/allstar/game/rosters/2020">basketball.realgm.com</a> and from the <a href="http://www.espn.com/nba/history/awards/_/id/33">ESPN.com website</a>.
+
+The goal for this table was to provide an **Overview** of the main events of the selected **NBA Season**, looking into the **NBA Finals**, the **NBA All-Star Game** and the winners of the main **NBA Awards**.
+
+The main datasets at the source of the following visualisation are as follows :
+
+* `{get_finals_stats(season)}`<br>
+I scraped the <a href="https://www.nba.com/stats/events/?flag=3&CFID=155&CFPARAMS=2020-21&TeamID=1610612747&ContextMeasure=FGA&Season=2020-21&section=team&sct=hex">NBA.com</a> website in order to get the result for all games in a specific **NBA Finals**, in order to visually represent the way the NBA Finals playet out.
+As a reminder, the NBA Finals are a series between the winner of each Conference, in a Best Of 4 Games match-up, meaning the first team to win 4 games in the series wins the NBA Finals.
+
+```{r echo=TRUE}
+get_finals_stats(season = "2018-19") %>% 
+   rmarkdown::paged_table()
+```
+
+
+* `{get_award_stats(award, .season)}`<br>
+I scraped the <a href="https://www.basketball-reference.com/awards/mvp.html">basketball-reference</a> website in order to get the relevant statistics for the recipient of a given **NBA Award** in a given **Season** (MVP, Finals MVP, Sixth Man of the Year, Defensive Player of the Year, Most Improved Player or Rookie of the Year).
+
+```{r}
+get_award_stats(award = "mvp", .season = "2018-19")
+```
+
+
+* `{get_all_stars(season)}`<br>
+I scraped the <a href="https://basketball.realgm.com/nba/allstar/game/rosters/2020">basketball.realgm.com</a> website in order to get a table of the players that were honored with a selection to the **NBA All-Star Game** in a particular NBA Season
+
+```{r echo=TRUE}
+get_all_stars(season = "2018-19") %>% 
+   rmarkdown::paged_table()
+```
+
+
+* ``{get_traditional_stats(season)}`<br>
+I scraped the <a href="https://www.nba.com/stats/events/?flag=3&CFID=155&CFPARAMS=2020-21&TeamID=1610612747&ContextMeasure=FGA&Season=2020-21&section=team&sct=hex">NBA.com</a> website in order to get the **Player Statistics** (in order to add the All-Stars season statistics as tooltip information).
+```{r echo=TRUE}
+get_traditional_stats(season = "2018-19") %>% 
+   rmarkdown::paged_table()
+```
+
+<h5 class = "text-primary"> 2) Visualisation choices</h5>
+
+This visualisation regroups three different visualisations and aims at providing a **visual overview** of a given NBA Season.
+The three combined visualisations are a **scatterplotted lollipop plot** that highlights the outcome of the NBA Finals, a **text plot** providing statistical insights about the recipients of the main NBA Awards and an **interactive facetted scatterplot** about the NBA All-Stars.
+
+In order to get a more complete picture of the situation, I used the `{ggiraph}` package to customize the All-Stars geom points tooltip to add the selected player's team name and relevant statistic using HTML and CSS.
+
+In order to give further visual upside to the chart, I used the `{ggtext}` package to plot the team logos and player pictures.
+
+The `{patchwork}` package was used to combine the three visualisations.
+
+In order to speed up the r code, I used the `{future}` package to run the three plotting functions in parallel.
+
+This specific instance of the visualisation is the result of the function `plot_season_recap(season = "2020-21")` and provides a deep-dive into the **2020-21 NBA Season**.
+
+<h5 class = "text-primary"> 3) Specific Definitions</h5>
+
+* **All-Star :** An All-Star is a player selected to participate to the NBA All-Star Game. It is an award typically granted to the 24 best players in the NBA.
+* **Sixth Man of the Year :** Sixth Man of the Year is an award granted to the player perceived as the best among players who start the game off the bench.
+* **Rookie of the Year :** Rookie of the Year is an award granted to the player perceived as the best among new players.
+
+
+</details>
+<br>
+
+```{r plot7}
+#tic()
+  ggiraph::girafe(ggobj = plot_season_recap("2020-21") ,
+                  width_svg = 10,
+                        height_svg = 34,
+                        options = list(ggiraph::opts_tooltip(css="background-color:transparent"),
+                                       ggiraph::opts_toolbar(saveaspng = FALSE),
+                                       ggiraph::opts_hover(css = "fill:red;"),
+                                       ggiraph::opts_sizing(rescale = FALSE)))
+#toc()
+```
+
+<br>
+
+# {-}
+
+
+  
+<div style="text-align:center;padding-bottom:10px;padding-top:30px;color:#999999;background-color:#333333;font-size:14px">
+<a href="mailto:henri.freixe@edhec.com"><img border="0" alt="Email" src="https://assets.dryicons.com/uploads/icon/svg/12421/8a68a1d5-1b61-4e1f-8e91-6f7e30516e1d.svg" width="30" height="30"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="https://www.linkedin.com/in/henri-freixe/"><img border="0" alt="LinkedIn" src="https://assets.dryicons.com/uploads/icon/svg/8336/2bdc9209-f5bb-4103-acf2-0685de181010.svg" width="30" height="30"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="https://twitter.com/freixehenri"><img border="0" alt="Twitter" src="https://assets.dryicons.com/uploads/icon/svg/8384/ecf4ac0a-f8ce-4ffe-86bf-918b636ec99e.svg" width="30" height="30"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/HenriFreixe"><img border="0" alt="Github" src="https://assets.dryicons.com/uploads/icon/svg/8312/cc33248a-e56e-4e7f-93f4-0e16350e5768.svg" width="30" height="30"></a><br><br>
+<span style = 'font-size:14px'>A Project by Henri Freixe as part of the EPFL Applied Data Science Communication & Visualisation Certificate of Open Studies</span><br>
+<span style = 'font-size:12px'>Sources: nba.com, espn.com, basketball-reference.com, basketball.realgm.com, hoopshype.com </span>
+</div>
