@@ -31,6 +31,7 @@ h1 {
 ```{r}
 devtools::load_all()
 #Run if Kiwi Maru is not installed
+#sysfonts::font_add_google("Kiwi Maru)
 #sysfonts::font_add("Kiwi Maru",regular = #"fonts/fonts/kiwi-maru-v6-latin-regular.ttf")
 #  showtext::showtext_auto()
 #library(readr)

@@ -8,7 +8,7 @@ app_ui <- function(request) {
 
 
   tab <- function(...) {
-    shiny::tabPanel(...)#class = "p-3 border border-top-0 rounded-bottom text-secondary")
+    shiny::tabPanel(..., class = "nav nav-pills nav-justified")#class = "p-3 border border-top-0 rounded-bottom text-secondary")
   }
 
   #https://github.com/daattali/shinycssloaders

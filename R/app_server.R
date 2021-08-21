@@ -6,7 +6,8 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   ## Font management
-  sysfonts::font_add("Kiwi Maru2",regular = "fonts/fonts/kiwi-maru-v6-latin-regular.ttf")
+  #sysfonts::font_add("Kiwi Maru",regular = "fonts/fonts/kiwi-maru-v6-latin-regular.ttf")
+  sysfonts::font_add_google("Kiwi Maru")
   showtext::showtext_auto()
   #use_font("kiwi-maru", "fonts/css/kiwi-maru.css", selector = "body")
 
