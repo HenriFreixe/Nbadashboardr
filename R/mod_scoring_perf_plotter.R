@@ -25,6 +25,9 @@ mod_scoring_perf_plotter_server <- function(id, scoring_perf){
                                                           season = scoring_perf$season())})
 
 
+    observeEvent(scoring_perf$change(),
+                 {shinyjs::enable("download")})
+
     output$download <- downloadHandler(
       filename = function() {
         glue::glue("scoring_perf_{scoring_perf$season() %>% stringr::str_sub(end = 4) %>% as.integer() +1}_{scoring_perf$team() %>% get_last_name() %>% stringr::str_to_lower()}.png")

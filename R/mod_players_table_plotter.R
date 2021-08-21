@@ -25,6 +25,9 @@ change_plot <- eventReactive(players_table$change(),
                                                  variable = players_table$variable())})
 
 
+observeEvent(players_table$change(),
+             {shinyjs::enable("download")})
+
 output$download <- downloadHandler(
   filename = function() {
     glue::glue("players_table_{players_table$variable()}_{players_table$season() %>% stringr::str_sub(end = 4) %>% as.integer() +1}.html")

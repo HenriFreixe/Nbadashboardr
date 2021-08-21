@@ -21,7 +21,7 @@ mod_players_table_selector_ui <- function(id){
                        choices=scope_variables("players_table"),
                        selected = "bpm"))
   ),actionButton(ns("change"),"Visualise", class = "btn-success"),
-  downloadButton(ns("download"),"Download Visualisation",class = "btn-success"),
+  shinyjs::disabled(downloadButton(ns("download"),"Download Visualisation",class = "btn-success")),
   br(),
   br(),
   HTML("<details>

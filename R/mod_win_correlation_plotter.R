@@ -26,6 +26,8 @@ mod_win_correlation_plotter_server <- function(id, win_correlation){
                                                   team = win_correlation$team())}
     )
 
+    observeEvent(win_correlation$change(),
+                 {shinyjs::enable("download")})
 
     output$download <- downloadHandler(
       filename = function() {

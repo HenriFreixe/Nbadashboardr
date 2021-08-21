@@ -27,6 +27,7 @@ Imports:
     readr,
     shiny,
     shinycustomloader,
+    shinyjs,
     showtext,
     sysfonts,
     systemfonts,

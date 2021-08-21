@@ -24,6 +24,9 @@ mod_off_eff_plotter_server <- function(id, off_eff){
                                  {plot_off_evo_interactive(team = off_eff$team())}
     )
 
+    observeEvent(off_eff$change(),
+                 {shinyjs::enable("download")})
+
     output$download <- downloadHandler(
       filename = function() {
         glue::glue("offensive_eff_{off_eff$team() %>% get_last_name() %>% stringr::str_to_lower()}.png")

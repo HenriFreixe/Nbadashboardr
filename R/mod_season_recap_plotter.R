@@ -23,6 +23,9 @@ mod_season_recap_plotter_server <- function(id, season_recap){
     change_plot <- eventReactive(season_recap$change(),
                                  {plot_season_recap(season = season_recap$season())})
 
+    observeEvent(season_recap$change(),
+                 {shinyjs::enable("download")})
+
     output$download <- downloadHandler(
       filename = function() {
         glue::glue("season_recap_{season_recap$season() %>% stringr::str_sub(end = 4) %>% as.integer() +1}.png")

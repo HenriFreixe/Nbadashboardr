@@ -21,7 +21,7 @@ mod_shot_chart_selector_ui <- function(id){
                        choices = scope_players("2020-21")))
     ),
     actionButton(ns("change"),"Visualise", class = "btn-success"),
-    downloadButton(ns("download"),"Download Visualisation",class = "btn-success"),
+    shinyjs::disabled(downloadButton(ns("download"),"Download Visualisation",class = "btn-success")),
     br(),
     br(),
     HTML("<details>

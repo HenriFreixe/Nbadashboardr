@@ -33,6 +33,7 @@ app_ui <- function(request) {
     # List the first level UI elements here
     fluidPage(
       theme = my_theme,
+      shinyjs::useShinyjs(),
       tags$h1(style = "text-align:center","NBA Analytics Dashboard",HTML("<img src='https://a.espncdn.com/combiner/i?img=/i/teamlogos/leagues/500/nba.png' alt='NBA Logo' width = 15% style = 'text-align:center;'>")),
       class = "content",
       tags$br(),

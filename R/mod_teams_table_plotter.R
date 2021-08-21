@@ -24,6 +24,9 @@ mod_teams_table_plotter_server <- function(id, teams_table){
                                  {plot_teams_table(conf = teams_table$conference(),
                                                    season = teams_table$season())})
 
+    observeEvent(teams_table$change(),
+                 {shinyjs::enable("download")})
+
     output$download <- downloadHandler(
       filename = function() {
         glue::glue("teams_table_{teams_table$conf()}_{teams_table$season() %>% stringr::str_sub(end = 4) %>% as.integer() +1}.html")

@@ -21,8 +21,8 @@ mod_player_rank_selector_ui <- function(id){
                        choices=scope_variables("player_rank"),
                        selected = "bpm"))
   ),
-  actionButton(ns("change"),"Visualize", class = "btn-success"),
-  downloadButton(ns("download"),"Download Visualization",class = "btn-success"),
+  actionButton(ns("change"),"Visualise", class = "btn-success"),
+  shinyjs::disabled(downloadButton(ns("download"),"Download Visualisation",class = "btn-success")),
   br(),
   br(),
   HTML("<details>

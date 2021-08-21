@@ -25,6 +25,9 @@ mod_net_rating_plotter_server <- function(id, net_rating){
     )
 
 
+    observeEvent(net_rating$change(),
+                 {shinyjs::enable("download")})
+
     output$download <- downloadHandler(
       filename = function() {
         glue::glue("net_rating_{net_rating$season() %>% stringr::str_sub(end = 4) %>% as.integer() +1}.png")

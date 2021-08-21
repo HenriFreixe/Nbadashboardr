@@ -24,6 +24,9 @@ mod_player_rank_plotter_server <- function(id, player_rank){
                                  {plot_player_ranking_interactive(variable = player_rank$variable(),
                                                                   season = player_rank$season())})
 
+    observeEvent(player_rank$change(),
+                 {shinyjs::enable("download")})
+
 
     output$download <- downloadHandler(
       filename = function() {

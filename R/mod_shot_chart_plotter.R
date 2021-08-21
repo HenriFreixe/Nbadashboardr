@@ -29,6 +29,9 @@ mod_shot_chart_plotter_server <- function(id, shot_chart){
                             )
 
 
+    observeEvent(shot_chart$change(),
+                 {shinyjs::enable("download")})
+
 
     output$download <- downloadHandler(
       filename = function() {

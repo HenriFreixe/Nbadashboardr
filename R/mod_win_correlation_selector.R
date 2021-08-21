@@ -27,7 +27,7 @@ mod_win_correlation_selector_ui <- function(id){
                        selected = "Phoenix Suns"))
   ),
   actionButton(ns("change"),"Visualise", class = "btn-success"),
-  downloadButton(ns("download"),"Download Visualisation",class = "btn-success"),
+  shinyjs::disabled(downloadButton(ns("download"),"Download Visualisation",class = "btn-success")),
   br(),
   br(),
   HTML("<details>
