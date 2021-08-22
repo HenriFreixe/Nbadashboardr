@@ -6,6 +6,8 @@
 #' @noRd
 app_ui <- function(request) {
 
+  #sysfonts::font_add_google("Kiwi Maru")
+  #showtext::showtext_auto()
 
   tab <- function(...) {
     shiny::tabPanel(..., class = "nav nav-pills nav-justified")#class = "p-3 border border-top-0 rounded-bottom text-secondary")

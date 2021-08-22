@@ -7,9 +7,22 @@
 app_server <- function( input, output, session ) {
   ## Font management
   #sysfonts::font_add("Kiwi Maru",regular = "fonts/fonts/kiwi-maru-v6-latin-regular.ttf")
-  sysfonts::font_add_google("Kiwi Maru")
+  #systemfonts::register_font("Kiwi Maru", plain = list("fonts/fonts/kiwi-maru-v6-latin-regular.ttf",0))
+  #sysfonts::font_add_google("Kiwi Maru")
+  #showtext::showtext_auto()
+  #setup_font(
+  #  id = "kiwi-maru", output_dir = "fonts",
+  #  variants = c("regular", "italic", "700", "700italic"),
+  #  prefer_local_source = FALSE
+  #)
+  sysfonts::font_add("Kiwi Maru",regular = "fonts/fonts/kiwi-maru-v7-latin-regular.ttf")
   showtext::showtext_auto()
-  #use_font("kiwi-maru", "fonts/css/kiwi-maru.css", selector = "body")
+  #sysfonts::font_add("Kiwi Maru",regular = "fonts/fonts/kiwi-maru-v7-latin-regular.svg")
+  #sysfonts::font_add("Kiwi Maru",regular = "fonts/fonts/kiwi-maru-v7-latin-regular.eot")
+  gfonts::use_font("kiwi-maru", "fonts/css/kiwi-maru.css", selector = ".dummy-selector")
+  systemfonts::register_font(name = "Kiwi Maru",
+                             plain = list("fonts/fonts/kiwi-maru-v7-latin-regular.woff2", 0))
+
 
 
   # List the first level callModules here
