@@ -9,9 +9,11 @@ app_ui <- function(request) {
   #sysfonts::font_add_google("Kiwi Maru")
   #showtext::showtext_auto()
 
-  tab <- function(...) {
-    shiny::tabPanel(..., class = "nav nav-pills nav-justified")#class = "p-3 border border-top-0 rounded-bottom text-secondary")
-  }
+ tab <- function(...) {
+   shiny::tabPanel(..., class = "justify-content-center")#class = "p-3 border border-top-0 rounded-bottom text-secondary")
+ }
+
+
 
   #https://github.com/daattali/shinycssloaders
 
@@ -19,9 +21,10 @@ app_ui <- function(request) {
                   bootswatch = "minty",
                   #...,
                   bg = "#E8E8E8",
-                  fg = "#2F2E2E",
+                  fg = "#333333",
                   primary = "#685bb5",
                   secondary = "#E5284C",
+                  sucess = "#0fbf79",
                   base_font = bslib::font_google("Lato"),
                   heading_font = bslib::font_google("Kiwi Maru"),
                   code_font = bslib::font_google("Lato")
@@ -36,11 +39,16 @@ app_ui <- function(request) {
     fluidPage(
       theme = my_theme,
       shinyjs::useShinyjs(),
-      tags$h1(style = "text-align:center","NBA Analytics Dashboard",HTML("<img src='https://a.espncdn.com/combiner/i?img=/i/teamlogos/leagues/500/nba.png' alt='NBA Logo' width = 15% style = 'text-align:center;'>")),
+      tags$style(HTML(
+        ".nav { justify-content: center; }
+        h1, .row {text-align: center!important;}
+        .jumbotron {background-color:#333333; color:#999999;}"
+      )),
+      tags$h1("NBA Analytics Dashboard",HTML("<img src='https://a.espncdn.com/combiner/i?img=/i/teamlogos/leagues/500/nba.png' alt='NBA Logo' width = 15%'>")),
       class = "content",
       tags$br(),
-      tags$div(class = "jumbotron", style = "background-color:#333333",
-          tags$p(style = "color:#999999",
+      tags$div(class = "jumbotron",
+          tags$p(
             'This project aims at providing a thought-provoking outlook on the evolution of the NBA in the 21st Century.',
              tags$br(),
             'The document is organized in three tabs with a deep-dive on ',

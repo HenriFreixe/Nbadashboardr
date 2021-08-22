@@ -122,7 +122,7 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
   playoffs <- get_playoff_teams(season)
   champion <- get_champion(.season = season)
   conf_df <- get_team_standings(season) %>%
-    dplyr::select(team_name,conference)
+    dplyr::select(team_name,conference,former_team_name)
 
 
   if (conf == "West") {
@@ -141,8 +141,8 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
     table_data <- get_team_advanced_selections(season) %>%
       dplyr::left_join(conf_df, by = c("team_name")) %>%
       dplyr::left_join(previous_ranking, by = c("team_name")) %>%
-      dplyr::mutate(playoffs = dplyr::if_else(team_name %in% playoffs,glue::glue("<span style = 'color:#404040'>✓</span>"),""),
-                    champion = dplyr::if_else(team_name %in% champion,glue::glue("<span style = 'color:#404040'>{fontawesome::fa('trophy')}</span>"),"")) %>%
+      dplyr::mutate(playoffs = dplyr::if_else(former_team_name | team_name %in% playoffs,glue::glue("<span style = 'color:#404040'>✓</span>"),""),
+                    champion = dplyr::if_else(former_team_name | team_name %in% champion,glue::glue("<span style = 'color:#404040'>{fontawesome::fa('trophy')}</span>"),"")) %>%
       dplyr::left_join(lead_player, by = c("team_id")) %>%
       dplyr::mutate(team_name = glue::glue("<b style = 'font-size:14px'>{get_last_name(team_name)}</b> <span style = 'font-size:9px;color:grey'>{w}-{l}</span>"),
                     rank = rank(dplyr::desc(w_pct), ties.method = 'first' ),
@@ -193,7 +193,7 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
   table <- table_data %>%
     gt::gt() %>%
     ## COLORS --------------------------------------------------------------------
-  gt::data_color(columns = gt::vars(w_pct,off_rating),
+  gt::data_color(columns = c(w_pct,off_rating),
                  colors = scales::col_numeric(
                    palette = rev(c("#35b0ab",
                                    "#59bbac",
@@ -205,7 +205,7 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
                                    "#f2fbd2")),
                    domain = NULL
                  )) %>%
-    gt::data_color(columns = gt::vars(def_rating),
+    gt::data_color(columns = c(def_rating),
                    colors = scales::col_numeric(c("#35b0ab",
                                                   "#59bbac",
                                                   "#76c7ad",
@@ -216,24 +216,24 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
                                                   "#f2fbd2"),
                                                 domain = NULL
                    )) %>%
-    gt::data_color(columns = gt::vars(playoffs),
+    gt::data_color(columns = c(playoffs),
                    colors = scales::col_factor(
                      palette = c(court_themes('bg_table_markdown'),"#fad684"),
                      domain = NULL
                    )) %>%
-    gt::data_color(columns = gt::vars(conference),
+    gt::data_color(columns = c(conference),
                    apply_to = "text",
                    colors = scales::col_factor(
                      palette = c(court_themes('bg_table_markdown'),"#de425b"),
                      domain = NULL
                    )) %>%
-    gt::data_color(columns = gt::vars(champion),
+    gt::data_color(columns = c(champion),
                    colors = scales::col_factor(
                      palette = c(court_themes('bg_table_markdown'),"#fad684"),
                      domain = c("",glue::glue("<span style = 'color:#404040'>{fontawesome::fa('trophy')}</span>"))
                    )) %>%
     ## IMAGES --------------------------------------------------------------------
-  gt::text_transform(locations = gt::cells_body(gt::vars(logo,image)),
+  gt::text_transform(locations = gt::cells_body(c(logo,image)),
                      fn = function(x) {
                        gt::web_image(url = x, height = gt::px(35))
                      }) %>%
@@ -284,23 +284,23 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
       locations = list(gt::cells_title(groups = "subtitle"))) %>%
     gt::tab_style(
       style = list(gt::cell_text(font = "Manrope", size = "x-small", align = "center")),
-      location = list(gt::cells_body(columns = gt::vars(rank_change)))
+      location = list(gt::cells_body(columns = c(rank_change)))
     ) %>%
     gt::tab_style(
       style = list(
         gt::cell_fill(color = "#fad684")
       ),
       locations = gt::cells_body(
-        columns = gt::vars(selections),
+        columns = c(selections),
         rows = selections != ""
       )) %>%
     ## Tab Spanners
     gt::tab_spanner(label = gt::md("**TEAM RESULTS**"),
-                    columns = gt::vars(w_pct,off_rating,def_rating,net_rating)) %>%
+                    columns = c(w_pct,off_rating,def_rating,net_rating)) %>%
     gt::tab_spanner(label = gt::md("**ROSTER STANDOUTS**"),
-                    columns = gt::vars(selections,image,player_name)) %>%
+                    columns = c(selections,image,player_name)) %>%
     gt::tab_spanner(label = gt::md("**POSTSEASON**"),
-                    columns = gt::vars(playoffs,champion)) %>%
+                    columns = c(playoffs,champion)) %>%
     ## Borders formatting
     gt::tab_style(
       style = list(
@@ -312,7 +312,7 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
       ),
       locations = list(
         gt::cells_body(
-          columns = gt::vars(w_pct,selections,playoffs)
+          columns = c(w_pct,selections,playoffs)
         )
       )
     ) %>%
@@ -347,32 +347,32 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
                    champion = "Champion") %>%
     ## Column Widths
     gt::cols_width(
-      gt::vars(rank)~gt::px(30),
-      gt::vars(rank_change)~gt::px(30),
-      gt::vars(logo)~gt::px(50),
-      gt::vars(team_name)~gt::px(200),
-      gt::vars(conference)~gt::px(80),
-      gt::vars(w_pct)~gt::px(80),
-      gt::vars(off_rating)~gt::px(80),
-      gt::vars(def_rating)~gt::px(80),
-      gt::vars(net_rating)~gt::px(75),
-      gt::vars(selections)~gt::px(75),
-      gt::vars(image)~gt::px(65),
-      gt::vars(player_name)~gt::px(175),
-      gt::vars(playoffs)~gt::px(75),
-      gt::vars(champion)~gt::px(75)
+      c(rank)~gt::px(30),
+      c(rank_change)~gt::px(30),
+      c(logo)~gt::px(50),
+      c(team_name)~gt::px(200),
+      c(conference)~gt::px(80),
+      c(w_pct)~gt::px(80),
+      c(off_rating)~gt::px(80),
+      c(def_rating)~gt::px(80),
+      c(net_rating)~gt::px(75),
+      c(selections)~gt::px(75),
+      c(image)~gt::px(65),
+      c(player_name)~gt::px(175),
+      c(playoffs)~gt::px(75),
+      c(champion)~gt::px(75)
     ) %>%
     gt::tab_footnote(
       footnote = gt::md(glue::glue("Efficiency corresponds to the number of points scored / allowed every 100 possessions")),
-      locations = gt::cells_column_labels(columns = gt::vars(off_rating,def_rating))
+      locations = gt::cells_column_labels(columns = c(off_rating,def_rating))
     ) %>%
     gt::tab_footnote(
       footnote = gt::md(glue::glue("Number of players to participate in the {season} NBA All-Star Game")),
-      locations = gt::cells_column_labels(columns = gt::vars(selections))
+      locations = gt::cells_column_labels(columns = c(selections))
     ) %>%
 
-    gt::tab_options(table.border.top.color = "transparent",
-                    table.border.bottom.color = "transparent",
+    gt::tab_options(table.border.top.color = court_themes("bg_table_markdown"),
+                    table.border.bottom.color = court_themes("bg_table_markdown"),
                     table.border.bottom.width = gt::px(2),
                     column_labels.border.top.width = gt::px(2),
                     column_labels.border.bottom.width = gt::px(2),
@@ -398,17 +398,17 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
   if (season == "2020-21") {
     table <- table %>% gt::tab_footnote(
       footnote = gt::md(glue::glue("{season} NBA Season has yet to crown an NBA Champion")),
-      locations = gt::cells_column_labels(columns = gt::vars(playoffs,champion)))
+      locations = gt::cells_column_labels(columns = c(playoffs,champion)))
 
   }else {
     table <- table
   }
   if (conf == "both") {
     table <- table %>%
-      gt::cols_hide(columns = gt::vars(rank_change)) %>%
-      gt::cols_width(gt::vars(team_name)~gt::px(150))
+      gt::cols_hide(columns = c(rank_change)) %>%
+      gt::cols_width(c(team_name)~gt::px(150))
   }else {
-    table <- table %>% gt::cols_hide(columns = gt::vars(conference))
+    table <- table %>% gt::cols_hide(columns = c(conference))
   }
 
   return(table)

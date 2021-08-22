@@ -57,7 +57,7 @@ plot_players_table <- function(season = "2020-21", variable = "bpm") {
   table <- table_data %>%
     gt::gt() %>%
     ## COLORS --------------------------------------------------------------------
-  gt::data_color(columns = gt::vars(pts,ast,reb,blk,stl),
+  gt::data_color(columns = c(pts,ast,reb,blk,stl),
                  colors = scales::col_numeric(
                    palette = rev(c("#35b0ab",
                                    "#59bbac",
@@ -70,7 +70,7 @@ plot_players_table <- function(season = "2020-21", variable = "bpm") {
                    domain = NULL
                  )) %>%
 
-    gt::data_color(columns = gt::vars(fg2_pct,fg3_pct,ft_pct),
+    gt::data_color(columns = c(fg2_pct,fg3_pct,ft_pct),
                    colors = scales::col_numeric(
                      palette = rev(c("#de425b",
                                      "#eb5f57",
@@ -83,38 +83,38 @@ plot_players_table <- function(season = "2020-21", variable = "bpm") {
                      ),
                      domain = NULL
                    )) %>%
-    gt::data_color(columns = gt::vars(champion),
+    gt::data_color(columns = c(champion),
                    colors = scales::col_factor(
                      palette = c(court_themes('bg_table_markdown'),"#fad684"),
                      domain = c("",glue::glue("<span style = 'color:#404040'>{fontawesome::fa('trophy')}</span>"))
                    )) %>%
-    gt::data_color(columns = gt::vars(playoffs),
+    gt::data_color(columns = c(playoffs),
                    colors = scales::col_factor(
                      palette = c(court_themes('bg_table_markdown'),"#fad684"),
                      domain = NULL
                    )) %>%
-    gt::data_color(columns = gt::vars(fmvp),
+    gt::data_color(columns = c(fmvp),
                    colors = scales::col_factor(
                      palette = c(court_themes('bg_table_markdown'),"#fad684"),
                      domain = c("",glue::glue("<span style = 'color:#404040'>{fontawesome::fa('medal')}</span>"))
                    )) %>%
-    gt::data_color(columns = gt::vars(mvp),
+    gt::data_color(columns = c(mvp),
                    colors = scales::col_factor(
                      palette = c(court_themes('bg_table_markdown'),"#ffc391"),
                      domain = c("",glue::glue("<span style = 'color:#404040'>{fontawesome::fa('medal')}</span>"))
                    )) %>%
-    gt::data_color(columns = gt::vars(dpoy),
+    gt::data_color(columns = c(dpoy),
                    colors = scales::col_factor(
                      palette = c(court_themes('bg_table_markdown'),"#ffc391"),
                      domain = c("",glue::glue("<span style = 'color:#404040'>{fontawesome::fa('shield-alt')}</span>"))
                    )) %>%
-    gt::data_color(columns = gt::vars(all_star),
+    gt::data_color(columns = c(all_star),
                    colors = scales::col_factor(
                      palette = c(court_themes('bg_table_markdown'),"#ffc391"),
                      domain = c("","<span style = 'color:#404040'>&#9733;</span>"))
     ) %>%
     ## IMAGES --------------------------------------------------------------------
-  gt::text_transform(locations = gt::cells_body(gt::vars(logo,image)),
+  gt::text_transform(locations = gt::cells_body(c(logo,image)),
                      fn = function(x) {
                        gt::web_image(url = x, height = gt::px(35))
                      }) %>%
@@ -168,15 +168,15 @@ plot_players_table <- function(season = "2020-21", variable = "bpm") {
     )) %>%
     ## Tab Spanners ----------------------------------------------------------------
   gt::tab_spanner(label = gt::md("**PER GAME STATISTICS**"),
-                  columns = gt::vars(pts,ast,reb,blk,stl)) %>%
+                  columns = c(pts,ast,reb,blk,stl)) %>%
     gt::tab_spanner(label = gt::md("**SHOOTING ACCURACY**"),
-                    columns = gt::vars(fg2_pct,fg3_pct,ft_pct)) %>%
+                    columns = c(fg2_pct,fg3_pct,ft_pct)) %>%
     gt::tab_spanner(label = gt::md("**AWARDS**"),
-                    columns = gt::vars(mvp,dpoy,all_star)) %>%
+                    columns = c(mvp,dpoy,all_star)) %>%
     gt::tab_spanner(label = gt::md("**ALL-IN-ONE METRICS**"),
-                    columns = gt::vars(bpm,obpm,dbpm)) %>%
+                    columns = c(bpm,obpm,dbpm)) %>%
     gt::tab_spanner(label = gt::md("**POSTSEASON**"),
-                    columns = gt::vars(logo,team_name,playoffs,champion,fmvp)) %>%
+                    columns = c(logo,team_name,playoffs,champion,fmvp)) %>%
     ## Borders formatting ----------------------------------------------------------
   gt::tab_style(
     style = list(
@@ -188,26 +188,26 @@ plot_players_table <- function(season = "2020-21", variable = "bpm") {
     ),
     locations = list(
       gt::cells_body(
-        columns = gt::vars(pts,fg2_pct,mvp,bpm,logo)
+        columns = c(pts,fg2_pct,mvp,bpm,logo)
       )
     )
   ) %>%
     ## Footnotes -------------------------------------------------------------------
   gt::tab_footnote(
     footnote = gt::md(glue::glue("Shooting Percentage among players shooting at least 0.2 Three point shots per Game")),
-    locations = gt::cells_column_labels(columns = gt::vars(fg3_pct))
+    locations = gt::cells_column_labels(columns = c(fg3_pct))
   ) %>%
     gt::tab_footnote(
       footnote = gt::md(glue::glue("Free Throw Shooting")),
-      locations = gt::cells_column_labels(columns = gt::vars(ft_pct))
+      locations = gt::cells_column_labels(columns = c(ft_pct))
     ) %>%
     gt::tab_footnote(
       footnote = gt::md(glue::glue("Defensive Player of the Year")),
-      locations = gt::cells_column_labels(columns = gt::vars(dpoy))
+      locations = gt::cells_column_labels(columns = c(dpoy))
     ) %>%
     gt::tab_footnote(
       footnote = gt::md(glue::glue("Box Plus Minus estimates a player's overall contribution")),
-      locations = gt::cells_column_labels(columns = gt::vars(bpm,obpm,dbpm))
+      locations = gt::cells_column_labels(columns = c(bpm,obpm,dbpm))
     ) %>%
     ## Column Labels ---------------------------------------------------------------
   gt::cols_label(rank = "",
@@ -234,33 +234,33 @@ plot_players_table <- function(season = "2020-21", variable = "bpm") {
                  fmvp = "Finals MVP") %>%
     ## Column Widths
     gt::cols_width(
-      gt::vars(rank)~gt::px(30),
-      gt::vars(image)~gt::px(50),
-      gt::vars(logo)~gt::px(50),
-      gt::vars(player_name)~gt::px(200),
-      gt::vars(pts)~gt::px(70),
-      gt::vars(ast)~gt::px(70),
-      gt::vars(reb)~gt::px(70),
-      gt::vars(blk)~gt::px(70),
-      gt::vars(stl)~gt::px(70),
-      gt::vars(fg2_pct)~gt::px(70),
-      gt::vars(fg3_pct)~gt::px(70),
-      gt::vars(ft_pct)~gt::px(70),
-      gt::vars(mvp)~gt::px(60),
-      gt::vars(dpoy)~gt::px(60),
-      gt::vars(all_star)~gt::px(60),
-      gt::vars(bpm)~gt::px(70),
-      gt::vars(obpm)~gt::px(70),
-      gt::vars(dbpm)~gt::px(70),
-      gt::vars(logo)~gt::px(50),
-      gt::vars(team_name)~gt::px(115),
-      gt::vars(playoffs)~gt::px(70),
-      gt::vars(champion)~gt::px(70),
-      gt::vars(fmvp)~gt::px(70)
+      c(rank)~gt::px(30),
+      c(image)~gt::px(50),
+      c(logo)~gt::px(50),
+      c(player_name)~gt::px(200),
+      c(pts)~gt::px(70),
+      c(ast)~gt::px(70),
+      c(reb)~gt::px(70),
+      c(blk)~gt::px(70),
+      c(stl)~gt::px(70),
+      c(fg2_pct)~gt::px(70),
+      c(fg3_pct)~gt::px(70),
+      c(ft_pct)~gt::px(70),
+      c(mvp)~gt::px(60),
+      c(dpoy)~gt::px(60),
+      c(all_star)~gt::px(60),
+      c(bpm)~gt::px(70),
+      c(obpm)~gt::px(70),
+      c(dbpm)~gt::px(70),
+      c(logo)~gt::px(50),
+      c(team_name)~gt::px(115),
+      c(playoffs)~gt::px(70),
+      c(champion)~gt::px(70),
+      c(fmvp)~gt::px(70)
     ) %>%
     ##Options --------------------------------------------------------------------
-  gt::tab_options(table.border.top.color = "transparent",
-                  table.border.bottom.color = "transparent",
+  gt::tab_options(table.border.top.color = court_themes("bg_table_markdown"),
+                  table.border.bottom.color = court_themes("bg_table_markdown"),
                   table.border.bottom.width = gt::px(2),
                   column_labels.border.top.width = gt::px(2),
                   column_labels.border.bottom.width = gt::px(2),
