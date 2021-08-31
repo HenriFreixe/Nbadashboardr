@@ -267,7 +267,7 @@ plot_bump_chart <- function(season = '2020-21',team = 'global', variable = 'sala
                           label.color = NA) +
     ggplot2::scale_color_identity(guide = 'none') +
     ggplot2::scale_size_manual(values = c(4,4.5), guide = 'none') +
-    ggplot2::guides(color = FALSE) +
+    ggplot2::guides(color = "none") +
     ggplot2::theme_minimal(base_size = 22) +
     theme_dark_cap() +
     ggplot2::theme(plot.title = ggtext::element_markdown(hjust = .5,
