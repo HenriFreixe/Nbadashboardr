@@ -122,7 +122,7 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
   playoffs <- get_playoff_teams(season)
   champion <- get_champion(.season = season)
   conf_df <- get_team_standings(season) %>%
-    dplyr::select(team_name,conference,former_team_name)
+    dplyr::select(team_name,conference)
 
 
   if (conf == "West") {
@@ -141,8 +141,16 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
     table_data <- get_team_advanced_selections(season) %>%
       dplyr::left_join(conf_df, by = c("team_name")) %>%
       dplyr::left_join(previous_ranking, by = c("team_name")) %>%
-      dplyr::mutate(playoffs = dplyr::if_else(former_team_name | team_name %in% playoffs,glue::glue("<span style = 'color:#404040'>✓</span>"),""),
-                    champion = dplyr::if_else(former_team_name | team_name %in% champion,glue::glue("<span style = 'color:#404040'>{fontawesome::fa('trophy')}</span>"),"")) %>%
+      dplyr::mutate(playoffs = dplyr::if_else( team_name %in% playoffs,
+                                               glue::glue("<span style = 'color:#404040'>✓</span>"),
+                                               dplyr::if_else(former_team_name %in% playoffs,
+                                               glue::glue("<span style = 'color:#404040'>✓</span>"),
+                                                              "")),
+                    champion = dplyr::if_else( team_name %in% champion,
+                                               glue::glue("<span style = 'color:#404040'>{fontawesome::fa('trophy')}</span>"),
+                                               dplyr::if_else(former_team_name %in% champion,
+                                               glue::glue("<span style = 'color:#404040'>{fontawesome::fa('trophy')}</span>"),
+                                                          ""))) %>%
       dplyr::left_join(lead_player, by = c("team_id")) %>%
       dplyr::mutate(team_name = glue::glue("<b style = 'font-size:14px'>{get_last_name(team_name)}</b> <span style = 'font-size:9px;color:grey'>{w}-{l}</span>"),
                     rank = rank(dplyr::desc(w_pct), ties.method = 'first' ),
@@ -168,8 +176,16 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
       dplyr::left_join(conf_df, by = c("team_name")) %>%
       dplyr::left_join(previous_ranking, by = c("team_name")) %>%
       dplyr::filter(conference == conf) %>%
-      dplyr::mutate(playoffs = dplyr::if_else(team_name %in% playoffs,glue::glue("<span style = 'color: #404040'>✓</span>"),""),
-                    champion = dplyr::if_else(team_name %in% champion,glue::glue("<span style = 'color:#404040'>{fontawesome::fa('trophy')}</span>"),"")) %>%
+      dplyr::mutate(playoffs = dplyr::if_else( team_name %in% playoffs,
+                                               glue::glue("<span style = 'color:#404040'>✓</span>"),
+                                               dplyr::if_else(former_team_name %in% playoffs,
+                                                              glue::glue("<span style = 'color:#404040'>✓</span>"),
+                                                              "")),
+                    champion = dplyr::if_else( team_name %in% champion,
+                                               glue::glue("<span style = 'color:#404040'>{fontawesome::fa('trophy')}</span>"),
+                                               dplyr::if_else(former_team_name %in% champion,
+                                                              glue::glue("<span style = 'color:#404040'>{fontawesome::fa('trophy')}</span>"),
+                                                              ""))) %>%
       dplyr::left_join(lead_player, by = c("team_id")) %>%
       dplyr::mutate(team_name = glue::glue("<div style = 'line-height:100%'><b style = 'font-size:14px'>{get_last_name(team_name)}</b> <span style = 'font-size:12px'>{remove_last_name(team_name)}</span></div> <div style = 'line-height:100%'><span style = 'font-size:12px;color:grey'>{w}-{l}</span></div>"),
                     rank = rank(dplyr::desc(w_pct), ties.method = 'first' ),
@@ -413,3 +429,5 @@ plot_teams_table <- function(season = "2019-20", conf = "both") {
 
   return(table)
 }
+
+
