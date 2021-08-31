@@ -272,7 +272,7 @@ off_rating_evo_interactive <- function(start_season = '2011-12', end_season = '2
                                     shape = 21,
                                     size = 7,
                                     stroke = 1) +
-    ggplot2::guides(color = FALSE, fill = FALSE) +
+    ggplot2::guides(color = "none", fill = "none") +
     ggplot2::scale_fill_identity() +
     ggplot2::scale_color_identity() +
     ggplot2::labs(title = glue::glue("<span style = 'color:{color_titles};'>{team_name_titles}</span> Offensive Efficiency and <br> shooting split evolution <span style = 'color:#CBA049;'>| {glue::glue('{stringr::str_sub(start_season,end = 4)}-{stringr::str_sub(end_season, start = 6)}')}</span>"),

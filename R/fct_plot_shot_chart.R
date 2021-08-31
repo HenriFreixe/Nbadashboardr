@@ -508,8 +508,8 @@ plot_court <- function(player,
                           label.padding = grid::unit(rep(0,4),"pt")) +
     ggplot2::labs(title = glue::glue("{player} Shooting Profile <span style='color:#CBA049;'>| {season}</span>" ),
                   subtitle = glue::glue("{get_last_name(player)} scored <span style='color:#CBA049;font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(pts)}</span> points per game,<br> on <span style='color:{get_subtitles_tbl(player,season) %>% dplyr::pull(color_fg2)};font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(fg2_pct) %>% round(digits = 3)*100}%</span> from 2 point shots and <span style='color:{get_subtitles_tbl(player,season) %>% dplyr::pull(color_fg3)};font-size:18pt;'>{get_subtitles_tbl(player,season) %>% dplyr::pull(fg3_pct)%>% round(digits = 3)*100}%</span> from threes")) +
-    ggplot2::guides(fill = FALSE,
-                    size = FALSE) +
+    ggplot2::guides(fill = "none",
+                    size = "none") +
     ggplot2::scale_size_identity() +
     ggplot2::scale_fill_manual(values = color_palette) # %globals% structure(TRUE, add = c("get_last_name","get_subtitles_tbl","average_2pct3pct","color_palette_tbl"))
 

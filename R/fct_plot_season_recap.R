@@ -168,7 +168,7 @@ plot_finals <- function(season = "2019-20") {
     ggplot2::scale_y_reverse(limits = c(df %>% dplyr::arrange(dplyr::desc(game)) %>% head(1) %>% dplyr::pull(game) + 6.5 ,-2.5)) +
     ggplot2::scale_x_continuous(limits = c(-1,1)) +
     ggplot2::scale_fill_manual(values = c("West" = "#2E4EB8","East" = "#de425b")) +
-    ggplot2::guides(fill = FALSE) +
+    ggplot2::guides(fill = "none") +
     ggplot2::labs(title = glue::glue("NBA Season Summary <span style = color:#CBA049;>| {season}</span>"),
                   subtitle = glue::glue("<span style = 'color:#CBA049;font-size:22pt;font-weight:bold'>NBA Finals</span><br>The <span style = color:#ccb076;>{get_champion(.season = season)}</span> won the NBA Championship"),
                   y = "",

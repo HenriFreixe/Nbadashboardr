@@ -215,9 +215,9 @@ plotless_scoring_rate <- function(season = "2020-21", team = "global") {
     #                        palette = 'vikO',
     #                        begin = .3,alpha,
     #                        end = .9) +
-    ggplot2::guides(fill = FALSE,
-                    size = FALSE,
-                    color = FALSE) +
+    ggplot2::guides(fill = "none",
+                    size = "none",
+                    color = "none") +
     ggplot2::theme_minimal(base_size = 22) +
     theme_dark_cap() +
     ggplot2::theme(plot.title = ggtext::element_markdown(hjust = .5,
