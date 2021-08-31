@@ -10,7 +10,7 @@ Imports:
     extrafont,
     furrr,
     future,
-    gfonts,
+    gfonts (>= 0.1.2.9000),
     ggbump,
     ggiraph,
     ggplot2,
