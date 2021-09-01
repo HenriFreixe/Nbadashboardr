@@ -164,7 +164,7 @@ plot_finals <- function(season = "2019-20") {
                         hjust = 0.5) +
     #Scales and Labs --------
   ggplot2::scale_size_continuous(range = c(12,17),
-                                 guide = FALSE) +
+                                 guide = "none") +
     ggplot2::scale_y_reverse(limits = c(df %>% dplyr::arrange(dplyr::desc(game)) %>% head(1) %>% dplyr::pull(game) + 6.5 ,-2.5)) +
     ggplot2::scale_x_continuous(limits = c(-1,1)) +
     ggplot2::scale_fill_manual(values = c("West" = "#2E4EB8","East" = "#de425b")) +
@@ -371,7 +371,7 @@ plot_all_stars <- function(season = "2018-19") {
                   subtitle = subtitle,
                   caption = glue::glue("Visualisation by Henri Freixe • Sources : Nba.com, Basketball-reference.com, Basketball.realgm.com,Espn.com")) +
     ggplot2::scale_fill_manual(values = RColorBrewer::brewer.pal(n = 5, "Set3"),
-                               guide = FALSE) +
+                               guide = "none") +
     ggplot2::scale_x_continuous(limits = c(-.5,2.5)) +
     ggplot2::scale_y_reverse(limits = c(2.25,-.5)) +
     ggplot2::facet_wrap(ggplot2::vars(label_pos),
