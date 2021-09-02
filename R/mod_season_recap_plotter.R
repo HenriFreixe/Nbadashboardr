@@ -35,7 +35,9 @@ mod_season_recap_plotter_server <- function(id, season_recap){
                         plot = print(change_plot()),
                         height = 34,
                         width = 10,
-                        units = "in"
+                        units = "in",
+                        device = png,
+                        dpi = 150
         )
 
       }

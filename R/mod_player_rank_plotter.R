@@ -37,7 +37,9 @@ mod_player_rank_plotter_server <- function(id, player_rank){
                         plot = print(change_plot()),
                         height = 12,
                         width = 16,
-                        units = "in"
+                        units = "in",
+                        device = png,
+                        dpi = 150
         )
 
       }

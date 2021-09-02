@@ -35,9 +35,11 @@ mod_net_rating_plotter_server <- function(id, net_rating){
       content = function(file) {
         ggplot2::ggsave(file,
                         plot = print(change_plot()),
-                        height = 12,
+                        height = 6,
                         width = 12,
-                        units = "in"
+                        units = "in",
+                        device = png,
+                        dpi = 150
         )
 
       }

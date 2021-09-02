@@ -37,7 +37,9 @@ mod_scoring_perf_plotter_server <- function(id, scoring_perf){
                         plot = print(change_plot()),
                         height = 12,
                         width = 12,
-                        units = "in"
+                        units = "in",
+                        device = png,
+                        dpi = 150
         )
 
       }

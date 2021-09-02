@@ -42,7 +42,9 @@ mod_shot_chart_plotter_server <- function(id, shot_chart){
                         plot = print(change_plot()),
                         height = 12,
                         width = 12,
-                        units = "in"
+                        units = "in",
+                        device = png,
+                        dpi = 150
         )
 
       }
