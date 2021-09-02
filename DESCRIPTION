@@ -13,6 +13,7 @@ Imports:
     gfonts (>= 0.1.2.9000),
     ggbump,
     ggiraph,
+    ggnewscale,
     ggplot2,
     ggtext,
     glue,
